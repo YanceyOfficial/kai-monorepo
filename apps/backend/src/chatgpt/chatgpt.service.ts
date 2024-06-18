@@ -20,15 +20,41 @@ export class ChatgptService {
       await this.client.getChatCompletions(this.AZURE_OPENAI_DEPLOMENT_ID, [
         {
           role: 'system',
-          content: '',
+          content: `
+          You mission is to help me learn English words, I"ll give you a series English words and phrases, 
+you help me generate a JSON format including Chinese explanation, examples, phonetic notation and other infomation. 
+This is a example:
+
+[
+    {
+        "word": "awareness",
+        "explanation": "n. 意识",
+        phoneticNotation: "/əˈwer.nəs/",
+        "examples": [
+        "Public awareness of the problem will make politicians take it seriously. 一旦公众意识到这个问题，政客们就会严肃对待它了。 ",
+        "Environmental awareness has increased dramatically over the past decade. 在过去的10年中，环保意识明显增强。"
+        ],
+    },
+    {
+        "word": "obsession",
+        "explanation": "n. 困扰;无法摆脱的念头;念念不忘的事（或人）",
+        "phoneticNotation": "/əbˈseʃ.ən/",
+        "examples": [
+            "He"s always wanted to find his birth mother but recently it"s become an obsession. 他一直想找到自己的生母，但最近这成了他的一块心病。"
+        ],
+    }
+    ...
+]
+          `,
         },
         {
           role: 'user',
-          content: words.toString(),
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          content: words.words.join('; '),
         },
       ]);
 
-    console.log(id, created, choices, usage);
-    return 'This action adds a new chatgpt';
+    return { id, created, choices, usage };
   }
 }

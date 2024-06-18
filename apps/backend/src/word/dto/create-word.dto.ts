@@ -19,9 +19,6 @@ export class WordDto {
 
 export class CreateWordListDto {
   @ApiProperty()
-  id: string;
-
-  @ApiProperty()
   words: WordDto[];
 
   @ApiProperty()

@@ -25,7 +25,10 @@ export class Word {
 @Schema()
 export class WordList {
   @Prop({ default: uuidv4 })
-  id: string;
+  _id: string;
+
+  @Prop()
+  title: string;
 
   @Prop([Word])
   words: Word[];
