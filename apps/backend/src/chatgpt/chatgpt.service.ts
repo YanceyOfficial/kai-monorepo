@@ -22,7 +22,8 @@ export class ChatgptService {
           role: 'system',
           content: `
           You mission is to help me learn English words, I"ll give you a series English words and phrases, 
-you help me generate a JSON format including Chinese explanation, examples, phonetic notation and other infomation. 
+you help me generate a JSON format including Chinese explanation, examples, US phonetic notation and other infomation.
+Just return a JSON text, do not return other illustration text.
 This is a example:
 
 [

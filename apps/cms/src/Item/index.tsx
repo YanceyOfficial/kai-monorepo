@@ -56,7 +56,8 @@ const Item: FC = () => {
           'crisis',
           'economic crisis',
           'crisis management',
-          'midlife crisis'
+          'midlife crisis',
+          'eccentric'
         ]
       })
     })
