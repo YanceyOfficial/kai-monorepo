@@ -32,6 +32,7 @@
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "joi": "^17.13.1",
+    "keycloak-connect": "^24.0.5",
     "microsoft-cognitiveservices-speech-sdk": "^1.38.0",
     "mongoose": "^8.4.3",
     "nest-keycloak-connect": "^1.10.0",

@@ -12,15 +12,9 @@ export class WordDto {
 
   @ApiProperty()
   examples: string[];
-
-  @ApiProperty()
-  pronunciationUrl: string;
 }
 
 export class CreateWordListDto {
   @ApiProperty()
   words: WordDto[];
-
-  @ApiProperty()
-  userId: string;
 }

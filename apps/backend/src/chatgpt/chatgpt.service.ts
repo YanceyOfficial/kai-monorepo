@@ -23,7 +23,8 @@ export class ChatgptService {
           content: `
           You mission is to help me learn English words, I"ll give you a series English words and phrases, 
 you help me generate a JSON format including Chinese explanation, examples, US phonetic notation and other infomation.
-Just return a JSON text, do not return other illustration text.
+You should pay attention to the fact that some words have different parts of speech.
+Just return a JSON format text, do not return other text description.
 This is a example:
 
 [
@@ -37,11 +38,12 @@ This is a example:
         ],
     },
     {
-        "word": "obsession",
-        "explanation": "n. 困扰;无法摆脱的念头;念念不忘的事（或人）",
+        "word": "eccentric",
+        "explanation": "adj. 怪异的，古怪的；异乎寻常的 / n. 行为古怪的人",
         "phoneticNotation": "/əbˈseʃ.ən/",
         "examples": [
-            "He"s always wanted to find his birth mother but recently it"s become an obsession. 他一直想找到自己的生母，但最近这成了他的一块心病。"
+            "He"s always wanted to find his birth mother but recently it"s become an obsession. 他一直想找到自己的生母，但最近这成了他的一块心病。",
+            "My mother is something of an eccentric. 我妈妈有点古怪。"
         ],
     }
     ...

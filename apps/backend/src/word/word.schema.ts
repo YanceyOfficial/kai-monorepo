@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, now } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 export type WordDocument = HydratedDocument<WordList>;
@@ -19,7 +19,10 @@ export class Word {
   examples: string[];
 
   @Prop()
-  pronunciationUrl: string;
+  score: number;
+
+  @Prop({ default: uuidv4 })
+  _id: string;
 }
 
 @Schema()
@@ -33,8 +36,14 @@ export class WordList {
   @Prop([Word])
   words: Word[];
 
-  @Prop({ required: true })
+  @Prop()
   userId: string;
+
+  @Prop({ default: now() })
+  createdAt: Date;
+
+  @Prop({ default: now() })
+  updatedAt: Date;
 }
 
 export const WordListSchema = SchemaFactory.createForClass(WordList);
