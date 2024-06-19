@@ -1,16 +1,11 @@
-import {
-  AppBar,
-  Avatar,
-  Box,
-  IconButton,
-  Toolbar,
-  Typography
-} from '@mui/material'
+import { AppBar, Box, Toolbar, Typography } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import { FC } from 'react'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import SSOLoading from './components/SSOLoading'
 import Item from './containers/Item'
 import List from './containers/List'
+import useSSO from './hooks/useSSO'
 
 const router = createBrowserRouter([
   {
@@ -28,6 +23,12 @@ const router = createBrowserRouter([
 ])
 
 const Layouts: FC = () => {
+  const keycloak = useSSO()
+
+  if (!keycloak?.authenticated) {
+    return <SSOLoading />
+  }
+
   return (
     <SnackbarProvider
       anchorOrigin={{
@@ -47,9 +48,10 @@ const Layouts: FC = () => {
               >
                 Kai CMS
               </Typography>
-              <IconButton sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
+              <p>
+                Hello, {keycloak?.profile?.firstName}{' '}
+                {keycloak?.profile?.lastName}
+              </p>
             </Toolbar>
           </AppBar>
         </Box>

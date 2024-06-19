@@ -16,7 +16,7 @@ const List: FC = () => {
   const columns: GridColDef[] = [
     { field: 'title', headerName: 'Title', resizable: false, width: 300 },
     {
-      field: '',
+      field: 'undefined',
       headerName: 'Words Count',
       width: 120,
       resizable: false,
@@ -38,7 +38,7 @@ const List: FC = () => {
     },
     {
       field: '_id',
-      headerName: '',
+      headerName: 'Actions',
       resizable: false,
       renderCell: (params) => (
         <Button
