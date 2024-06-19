@@ -25,7 +25,7 @@ export class Word {
   _id: string;
 }
 
-@Schema()
+@Schema({ timestamps: true })
 export class WordList {
   @Prop({ default: uuidv4 })
   _id: string;

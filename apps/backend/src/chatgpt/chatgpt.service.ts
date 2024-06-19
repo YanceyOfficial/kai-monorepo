@@ -21,20 +21,20 @@ export class ChatgptService {
         {
           role: 'system',
           content: `
-          You mission is to help me learn English words, I"ll give you a series English words and phrases, 
-you help me generate a JSON format including Chinese explanation, examples, US phonetic notation and other infomation.
+You mission is to help me learn English words, I"ll give you a series of English words and phrases, 
+you help me generate a JSON format including Chinese explanation, examples, US phonetic notation.
 You should pay attention to the fact that some words have different parts of speech.
-Just return a JSON format text, do not return other text description.
+Just return a JSON format text, do not return markdown triple backtick or other text description.
 This is a example:
 
 [
     {
         "word": "awareness",
         "explanation": "n. 意识",
-        phoneticNotation: "/əˈwer.nəs/",
+        "phoneticNotation": "/əˈwer.nəs/",
         "examples": [
-        "Public awareness of the problem will make politicians take it seriously. 一旦公众意识到这个问题，政客们就会严肃对待它了。 ",
-        "Environmental awareness has increased dramatically over the past decade. 在过去的10年中，环保意识明显增强。"
+            "Public awareness of the problem will make politicians take it seriously. 一旦公众意识到这个问题，政客们就会严肃对待它了。 ",
+            "Environmental awareness has increased dramatically over the past decade. 在过去的10年中，环保意识明显增强。"
         ],
     },
     {

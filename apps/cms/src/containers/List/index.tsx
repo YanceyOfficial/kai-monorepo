@@ -3,6 +3,7 @@ import { DataGrid, GridColDef, gridClasses } from '@mui/x-data-grid'
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
+import { formatJSONDate } from 'yancey-js-util'
 import { fetcher } from '../../utils'
 
 const List: FC = () => {
@@ -20,6 +21,20 @@ const List: FC = () => {
       width: 120,
       resizable: false,
       valueGetter: (_, row) => row.words.length
+    },
+    {
+      field: 'createdAt',
+      headerName: 'Created At',
+      valueGetter: (createdAt) => formatJSONDate(createdAt),
+      resizable: false,
+      width: 300
+    },
+    {
+      field: 'updatedAt',
+      headerName: 'Updated At',
+      valueGetter: (updatedAt) => formatJSONDate(updatedAt),
+      resizable: false,
+      width: 300
     },
     {
       field: '_id',

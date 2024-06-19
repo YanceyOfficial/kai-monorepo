@@ -10,11 +10,12 @@ import {
 } from '@mui/material'
 import { enqueueSnackbar } from 'notistack'
 import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { WordList } from '../../types'
 
 const Item: FC = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [showDialog, setShowDialog] = useState(!id ? true : false)
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
@@ -32,6 +33,7 @@ const Item: FC = () => {
     })
 
     enqueueSnackbar('Save Successfully!', { variant: 'success' })
+    navigate('/')
     return await response.json()
   }
 
@@ -47,6 +49,7 @@ const Item: FC = () => {
     })
 
     enqueueSnackbar('Save Successfully!', { variant: 'success' })
+    navigate('/')
     return await response.json()
   }
 
