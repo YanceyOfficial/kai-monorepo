@@ -11,7 +11,9 @@ import {
 import { enqueueSnackbar } from 'notistack'
 import { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { WordList } from '../../types'
+import { ChatCompletion, WordList } from '../../types'
+import { GET, PATCH, POST } from '../../utils'
+import CircularLoading from '../../components/CircularLoading'
 
 const Item: FC = () => {
   const { id } = useParams()
@@ -22,63 +24,41 @@ const Item: FC = () => {
   const [wordList, setWordList] = useState<WordList | null>(null)
 
   const create = async () => {
-    const response = await fetch('http://localhost:3002/word', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        words: wordList?.words
-      })
+    await POST<WordList>('/word', {
+      words: wordList?.words
     })
 
     enqueueSnackbar('Save Successfully!', { variant: 'success' })
     navigate('/')
-    return await response.json()
   }
 
   const update = async () => {
-    const response = await fetch(`http://localhost:3002/word/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        words: wordList?.words
-      })
+    await PATCH<WordList>(`/word/${id}`, {
+      words: wordList?.words
     })
 
     enqueueSnackbar('Save Successfully!', { variant: 'success' })
     navigate('/')
-    return await response.json()
   }
 
   const findOne = async () => {
-    const response = await fetch(`http://localhost:3002/word/${id}`, {
+    const { data } = await GET<WordList>(`/word/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       }
     })
 
-    const data: Required<WordList> = await response.json()
     setWordList(data)
   }
 
   const getAI = async () => {
     setLoading(true)
     try {
-      const response = await fetch('http://localhost:3002/chatgpt', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          words: input.split('\n').map((word) => word.trim())
-        })
+      const { data } = await POST<ChatCompletion>('/chatgpt', {
+        words: input.split('\n').map((word) => word.trim())
       })
 
-      const data = await response.json()
       setWordList(
         wordList
           ? {
@@ -100,6 +80,8 @@ const Item: FC = () => {
       findOne()
     }
   }, [id])
+
+  if (id && !wordList) return <CircularLoading />
 
   return (
     <section className="pb-14">

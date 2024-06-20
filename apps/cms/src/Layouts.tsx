@@ -49,8 +49,8 @@ const Layouts: FC = () => {
                 Kai CMS
               </Typography>
               <p>
-                Hello, {keycloak?.profile?.firstName}{' '}
-                {keycloak?.profile?.lastName}
+                Hello, {keycloak?.tokenParsed?.given_name}{' '}
+                {keycloak?.tokenParsed?.family_name}
               </p>
             </Toolbar>
           </AppBar>

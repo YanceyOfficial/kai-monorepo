@@ -18,8 +18,12 @@ const useSSO = () => {
     })
 
     if (isInitial && instance?.authenticated) {
-      localStorage.setItem('token', instance?.token || '')
-      setKeycloak(instance)
+      if (instance?.isTokenExpired()) {
+        instance.login()
+      } else {
+        localStorage.setItem('token', instance?.token || '')
+        setKeycloak(instance)
+      }
     }
   }
 

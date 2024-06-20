@@ -1,33 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWordListDto } from './dto/create-word.dto';
 import { UpdateWordListDto } from './dto/update-word.dto';
 import { WordList } from './word.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Claims } from 'src/guard/types';
 
 @Injectable()
 export class WordService {
   constructor(@InjectModel(WordList.name) private wordModel: Model<WordList>) {}
 
-  async create(createWordListDto: CreateWordListDto, user) {
+  public async create(createWordListDto: CreateWordListDto, user: Claims) {
     const count = await this.wordModel.countDocuments();
     const dto = {
       title: `Word List ${count + 1}`,
       words: createWordListDto.words.map((word) => ({ ...word, score: 5 })),
-      userId: user?.userId,
+      userId: user?.sub,
     };
     return this.wordModel.create(dto);
   }
 
-  findAll() {
-    return this.wordModel.find();
+  public async findAll(user: Claims) {
+    return this.wordModel.find({ userId: user.sub });
   }
 
-  findOne(id: string) {
-    return this.wordModel.findById(id);
+  public async findOne(id: string, user: Claims) {
+    const wordList = await this.wordModel.findById(id);
+
+    if (wordList.userId !== user.sub) {
+      throw new NotFoundException();
+    }
+
+    return wordList;
   }
 
-  update(id: number, updateWordListDto: UpdateWordListDto) {
+  public async update(
+    id: string,
+    updateWordListDto: UpdateWordListDto,
+    user: Claims,
+  ) {
+    const wordList = await this.wordModel.findById(id);
+
+    if (wordList.userId !== user.sub) {
+      throw new NotFoundException();
+    }
+
     return this.wordModel.findByIdAndUpdate(
       id,
       {
@@ -37,7 +54,13 @@ export class WordService {
     );
   }
 
-  remove(id: number) {
+  public async remove(id: string, user: Claims) {
+    const wordList = await this.wordModel.findById(id);
+
+    if (wordList.userId !== user.sub) {
+      throw new NotFoundException();
+    }
+
     return this.wordModel.findByIdAndDelete(id);
   }
 }

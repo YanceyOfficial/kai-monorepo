@@ -1,17 +1,15 @@
 import { Button } from '@mui/material'
 import { DataGrid, GridColDef, gridClasses } from '@mui/x-data-grid'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import useSWR from 'swr'
 import { formatJSONDate } from 'yancey-js-util'
-import { fetcher } from '../../utils'
+import { WordList } from '../../types'
+import { GET } from '../../utils'
+import CircularLoading from '../../components/CircularLoading'
 
 const List: FC = () => {
+  const [list, setList] = useState<WordList[] | null>(null)
   const navigate = useNavigate()
-  const { data, error, isLoading } = useSWR(
-    'http://127.0.0.1:3002/word',
-    fetcher
-  )
 
   const columns: GridColDef[] = [
     { field: 'title', headerName: 'Title', resizable: false, width: 300 },
@@ -51,8 +49,16 @@ const List: FC = () => {
     }
   ]
 
-  if (error) return <div>failed to load</div>
-  if (isLoading) return <div>loading...</div>
+  const fetchData = async () => {
+    const { data } = await GET<WordList[]>('/word')
+    setList(data)
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  if (!list) return <CircularLoading />
 
   return (
     <section>
@@ -63,7 +69,7 @@ const List: FC = () => {
       </section>
       <DataGrid
         getRowId={(row) => row._id}
-        rows={data || []}
+        rows={list || []}
         isRowSelectable={() => false}
         disableColumnSorting
         disableColumnMenu
