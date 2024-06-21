@@ -1,20 +1,20 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger'
 
 export class WordDto {
   @ApiProperty()
-  word: string;
+  word: string
 
   @ApiProperty()
-  explanation: string;
+  explanation: string
 
   @ApiProperty()
-  phoneticNotation: string;
+  phoneticNotation: string
 
   @ApiProperty()
-  examples: string[];
+  examples: string[]
 }
 
 export class CreateWordListDto {
   @ApiProperty()
-  words: WordDto[];
+  words: WordDto[]
 }

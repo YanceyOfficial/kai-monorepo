@@ -1,5 +1,5 @@
-import { KeycloakConnectModule } from 'nest-keycloak-connect';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config'
+import { KeycloakConnectModule } from 'nest-keycloak-connect'
 
 export const AuthModule = KeycloakConnectModule.registerAsync({
   useFactory: async (configService: ConfigService) => {
@@ -8,8 +8,8 @@ export const AuthModule = KeycloakConnectModule.registerAsync({
       realm: configService.get('KEY_CLOAK_REALM'),
       clientId: configService.get('KEY_CLOAK_CLIENT_ID'),
       secret: configService.get('KEY_CLOAK_CLIENT_SECRET'),
-      bearerOnly: true,
-    };
+      bearerOnly: true
+    }
   },
-  inject: [ConfigService],
-});
+  inject: [ConfigService]
+})

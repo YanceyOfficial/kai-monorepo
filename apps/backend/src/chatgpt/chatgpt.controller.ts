@@ -1,5 +1,5 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { ChatgptService } from './chatgpt.service';
+import { Body, Controller, Post } from '@nestjs/common'
+import { ChatgptService } from './chatgpt.service'
 
 @Controller('chatgpt')
 export class ChatgptController {
@@ -7,6 +7,6 @@ export class ChatgptController {
 
   @Post()
   create(@Body() words: string[]) {
-    return this.chatgptService.create(words);
+    return this.chatgptService.create(words)
   }
 }

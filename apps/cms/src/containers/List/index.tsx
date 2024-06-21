@@ -3,9 +3,9 @@ import { DataGrid, GridColDef, gridClasses } from '@mui/x-data-grid'
 import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatJSONDate } from 'yancey-js-util'
+import CircularLoading from '../../components/CircularLoading'
 import { WordList } from '../../types'
 import { GET } from '../../utils'
-import CircularLoading from '../../components/CircularLoading'
 
 const List: FC = () => {
   const [list, setList] = useState<WordList[] | null>(null)

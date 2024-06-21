@@ -10,11 +10,13 @@ import {
 } from '@mui/material'
 import { FieldArray, Form, Formik } from 'formik'
 import { enqueueSnackbar } from 'notistack'
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import AudioPlayer from '../../components/AudioPlayer'
 import CircularLoading from '../../components/CircularLoading'
-import { ChatCompletion, WordList } from '../../types'
-import { GET, POST } from '../../utils'
+import { YOUDAO_VOICE_URL } from '../../constants'
+import { ChatCompletion, Word, WordList } from '../../types'
+import { GET, PATCH, POST } from '../../utils'
 
 const Item: FC = () => {
   const { id } = useParams()
@@ -23,27 +25,28 @@ const Item: FC = () => {
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
   const [wordList, setWordList] = useState<WordList | null>(null)
+  const isUpdating = !!id
 
-  const create = async () => {
+  const create = async (words: Word[]) => {
     await POST<WordList>('/word', {
-      words: wordList?.words
+      words
     })
 
     enqueueSnackbar('Save Successfully!', { variant: 'success' })
     navigate('/')
   }
 
-  const update = async () => {
+  const update = async (words: Word[]) => {
     console.log(wordList)
-    // await PATCH<WordList>(`/word/${id}`, {
-    //   words: wordList?.words
-    // })
+    await PATCH<WordList>(`/word/${id}`, {
+      words
+    })
 
-    // enqueueSnackbar('Save Successfully!', { variant: 'success' })
-    // navigate('/')
+    enqueueSnackbar('Save Successfully!', { variant: 'success' })
+    navigate('/')
   }
 
-  const findOne = async () => {
+  const findOne = useCallback(async () => {
     const { data } = await GET<WordList>(`/word/${id}`, {
       method: 'GET',
       headers: {
@@ -52,7 +55,7 @@ const Item: FC = () => {
     })
 
     setWordList(data)
-  }
+  }, [id])
 
   const getAI = async () => {
     setLoading(true)
@@ -81,9 +84,9 @@ const Item: FC = () => {
     if (id) {
       findOne()
     }
-  }, [id])
+  }, [findOne, id])
 
-  if (id && !wordList) return <CircularLoading />
+  if (isUpdating && !wordList) return <CircularLoading />
 
   return (
     <section className="pb-14">
@@ -95,8 +98,9 @@ const Item: FC = () => {
         initialValues={{ words: wordList?.words }}
         enableReinitialize
         onSubmit={(values) => {
-          console.log(values)
-          // TODO:
+          if (values.words) {
+            isUpdating ? update(values.words) : create(values.words)
+          }
         }}
       >
         {({ values, handleChange, handleBlur }) => (
@@ -112,15 +116,18 @@ const Item: FC = () => {
                         className="w-[calc((100vw-96px)/5)] flex-shrink-0"
                       >
                         <CardContent className="flex flex-col gap-2">
-                          <p className="font-bold text-lg">
-                            {word}
+                          <div className="font-bold text-lg flex items-center gap-2">
+                            <span>{word}</span>
                             <span
-                              className="font-normal text-sm ml-2"
+                              className="font-normal text-sm"
                               color="text.secondary"
                             >
                               {phoneticNotation}
                             </span>
-                          </p>
+                            <AudioPlayer
+                              audioUrl={`${YOUDAO_VOICE_URL}${word}`}
+                            />
+                          </div>
                           <TextField
                             multiline
                             fullWidth
@@ -155,26 +162,20 @@ const Item: FC = () => {
                 </>
               )}
             />
-            <button type="submit">Invite</button>
+            <section className="w-full flex justify-end gap-4 fixed bg-white bottom-0 left-0 p-4">
+              {isUpdating || (
+                <Button variant="contained" onClick={() => setShowDialog(true)}>
+                  Input Words
+                </Button>
+              )}
+
+              <Button type="submit" variant="contained" disabled={!wordList}>
+                {isUpdating ? 'Update' : 'Create'}
+              </Button>
+            </section>
           </Form>
         )}
       </Formik>
-
-      <section className="w-full flex justify-end gap-4 fixed bg-white bottom-0 left-0 p-4">
-        {id ? null : (
-          <Button variant="contained" onClick={() => setShowDialog(true)}>
-            Input Words
-          </Button>
-        )}
-
-        <Button
-          variant="contained"
-          onClick={id ? update : create}
-          disabled={!wordList}
-        >
-          {id ? 'Update' : 'Create'}
-        </Button>
-      </section>
 
       <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
         <DialogContent>
@@ -182,6 +183,7 @@ const Item: FC = () => {
             * Make sure there is one word / phrase per line.
           </p>
           <TextField
+            focused
             label="Words"
             multiline
             rows={10}
