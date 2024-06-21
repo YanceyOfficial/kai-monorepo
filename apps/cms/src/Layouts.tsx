@@ -36,26 +36,24 @@ const Layouts: FC = () => {
         horizontal: 'center'
       }}
     >
-      <section className="fixed top-0 left-0 w-full">
-        <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static">
-            <Toolbar>
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{ flexGrow: 1, cursor: 'pointer' }}
-                onClick={() => window.location.replace('/')}
-              >
-                Kai CMS
-              </Typography>
-              <p>
-                Hello, {keycloak?.tokenParsed?.given_name}{' '}
-                {keycloak?.tokenParsed?.family_name}
-              </p>
-            </Toolbar>
-          </AppBar>
-        </Box>
-      </section>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar>
+          <Toolbar>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, cursor: 'pointer' }}
+              onClick={() => window.location.replace('/')}
+            >
+              Kai CMS
+            </Typography>
+            <p>
+              Hello, {keycloak?.tokenParsed?.given_name}{' '}
+              {keycloak?.tokenParsed?.family_name}
+            </p>
+          </Toolbar>
+        </AppBar>
+      </Box>
       <section className="p-4 pt-20 bg-gray-50 min-h-screen">
         <RouterProvider router={router} />
       </section>

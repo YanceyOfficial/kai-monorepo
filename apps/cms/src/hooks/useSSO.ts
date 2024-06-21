@@ -12,18 +12,14 @@ const useSSO = () => {
   const didInit = useRef(false)
 
   const initial = async () => {
-    const isInitial = await instance.init({
+    const authenticated = await instance.init({
       onLoad: 'login-required',
       checkLoginIframe: false
     })
 
-    if (isInitial && instance?.authenticated) {
-      if (instance?.isTokenExpired()) {
-        instance.login()
-      } else {
-        localStorage.setItem('token', instance?.token || '')
-        setKeycloak(instance)
-      }
+    if (authenticated) {
+      localStorage.setItem('token', instance?.token || '')
+      setKeycloak(instance)
     }
   }
 

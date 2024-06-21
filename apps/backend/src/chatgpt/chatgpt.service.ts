@@ -22,7 +22,7 @@ export class ChatgptService {
           role: 'system',
           content: `
 You mission is to help me learn English words, I"ll give you a series of English words and phrases, 
-you help me generate a JSON format including Chinese explanation, examples, US phonetic notation.
+you help me generate a JSON format including Chinese explanation, examples, american english pronunciation.
 You should pay attention to the fact that some words have different parts of speech.
 Just return a JSON format text, do not return markdown triple backtick or other text description.
 This is a example:

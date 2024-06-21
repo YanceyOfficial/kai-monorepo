@@ -8,12 +8,13 @@ import {
   DialogContent,
   TextField
 } from '@mui/material'
+import { FieldArray, Form, Formik } from 'formik'
 import { enqueueSnackbar } from 'notistack'
 import { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ChatCompletion, WordList } from '../../types'
-import { GET, PATCH, POST } from '../../utils'
 import CircularLoading from '../../components/CircularLoading'
+import { ChatCompletion, WordList } from '../../types'
+import { GET, POST } from '../../utils'
 
 const Item: FC = () => {
   const { id } = useParams()
@@ -33,12 +34,13 @@ const Item: FC = () => {
   }
 
   const update = async () => {
-    await PATCH<WordList>(`/word/${id}`, {
-      words: wordList?.words
-    })
+    console.log(wordList)
+    // await PATCH<WordList>(`/word/${id}`, {
+    //   words: wordList?.words
+    // })
 
-    enqueueSnackbar('Save Successfully!', { variant: 'success' })
-    navigate('/')
+    // enqueueSnackbar('Save Successfully!', { variant: 'success' })
+    // navigate('/')
   }
 
   const findOne = async () => {
@@ -88,34 +90,75 @@ const Item: FC = () => {
       {wordList?.title ? (
         <h1 className="font-bold text-4xl">{wordList?.title}</h1>
       ) : null}
-      <section className="my-4 flex gap-4 flex-wrap">
-        {wordList?.words.map(
-          ({ word, explanation, phoneticNotation, examples }) => (
-            <Card key={word} className="w-[calc((100vw-96px)/5)] flex-shrink-0">
-              <CardContent className="flex flex-col gap-2">
-                <p className="font-bold text-lg">
-                  {word}
-                  <span
-                    className="font-normal text-sm ml-2"
-                    color="text.secondary"
-                  >
-                    {phoneticNotation}
-                  </span>
-                </p>
-                <p className="text-sm opacity-60">{explanation}</p>
 
-                <ul className="pl-4 list-disc flex flex-col gap-2">
-                  {examples.map((example) => (
-                    <li key={example}>
-                      <p className="text-sm">{example}</p>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          )
+      <Formik
+        initialValues={{ words: wordList?.words }}
+        enableReinitialize
+        onSubmit={(values) => {
+          console.log(values)
+          // TODO:
+        }}
+      >
+        {({ values, handleChange, handleBlur }) => (
+          <Form className="my-4 flex gap-4 flex-wrap">
+            <FieldArray
+              name="words"
+              render={() => (
+                <>
+                  {values?.words?.map(
+                    ({ word, explanation, phoneticNotation, examples }, i) => (
+                      <Card
+                        key={word}
+                        className="w-[calc((100vw-96px)/5)] flex-shrink-0"
+                      >
+                        <CardContent className="flex flex-col gap-2">
+                          <p className="font-bold text-lg">
+                            {word}
+                            <span
+                              className="font-normal text-sm ml-2"
+                              color="text.secondary"
+                            >
+                              {phoneticNotation}
+                            </span>
+                          </p>
+                          <TextField
+                            multiline
+                            fullWidth
+                            hiddenLabel
+                            name={`words.${i}.explanation`}
+                            value={explanation}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            variant="filled"
+                            size="small"
+                          />
+                          <div className="flex flex-col gap-2 mt-4">
+                            {examples.map((example, j) => (
+                              <TextField
+                                key={j}
+                                multiline
+                                fullWidth
+                                hiddenLabel
+                                name={`words.${i}.examples.${j}`}
+                                value={example}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                variant="filled"
+                                size="small"
+                              />
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )
+                  )}
+                </>
+              )}
+            />
+            <button type="submit">Invite</button>
+          </Form>
         )}
-      </section>
+      </Formik>
 
       <section className="w-full flex justify-end gap-4 fixed bg-white bottom-0 left-0 p-4">
         {id ? null : (
