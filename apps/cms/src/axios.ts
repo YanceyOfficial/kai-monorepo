@@ -1,15 +1,17 @@
 import axios, { AxiosResponse } from 'axios'
 
-// config timeout
 axios.defaults.timeout = 5 * 10000
-
-// config request header
 axios.defaults.headers['Content-Type'] = 'application/json'
-axios.defaults.headers['Authorization'] =
-  `Bearer ${window.localStorage.getItem('token')}`
-
-// config base url
-axios.defaults.baseURL = import.meta.env.VITE_BEG_SERVICE_URL
+axios.defaults.baseURL = import.meta.env.VITE_SERVICE_URL
+axios.interceptors.request.use(
+  (config) => {
+    config.headers['Authorization'] =
+      `Bearer ${window.localStorage.getItem('token')}`
+    return config
+  },
+  null,
+  { synchronous: true }
+)
 
 // GET
 export function GET<T>(

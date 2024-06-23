@@ -23,9 +23,9 @@ const router = createBrowserRouter([
 ])
 
 const Layouts: FC = () => {
-  const keycloak = useSSO()
+  const { keycloak, didInit } = useSSO()
 
-  if (!keycloak?.authenticated) {
+  if (!(didInit && keycloak?.authenticated)) {
     return <SSOLoading />
   }
 

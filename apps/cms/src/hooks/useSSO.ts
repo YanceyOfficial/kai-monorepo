@@ -18,8 +18,9 @@ const useSSO = () => {
     })
 
     if (authenticated) {
-      localStorage.setItem('token', instance?.token || '')
+      window.localStorage.setItem('token', instance?.token || '')
       setKeycloak(instance)
+      didInit.current = true
     }
   }
 
@@ -27,13 +28,12 @@ const useSSO = () => {
     if (didInit.current) {
       return
     }
-    didInit.current = true
 
     initial()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [didInit])
 
-  return keycloak
+  return { didInit, keycloak }
 }
 
 export default useSSO

@@ -16,7 +16,7 @@ import AudioPlayer from '../../components/AudioPlayer'
 import CircularLoading from '../../components/CircularLoading'
 import { YOUDAO_VOICE_URL } from '../../constants'
 import { ChatCompletion, Word, WordList } from '../../types'
-import { GET, PATCH, POST } from '../../utils'
+import { GET, PATCH, POST } from '../../axios'
 
 const Item: FC = () => {
   const { id } = useParams()
@@ -116,7 +116,7 @@ const Item: FC = () => {
                         className="w-[calc((100vw-96px)/5)] flex-shrink-0"
                       >
                         <CardContent className="flex flex-col gap-2">
-                          <div className="font-bold text-lg flex items-center gap-2">
+                          <div className="font-bold text-lg flex items-center gap-2 flex-wrap">
                             <span>{word}</span>
                             <span
                               className="font-normal text-sm"

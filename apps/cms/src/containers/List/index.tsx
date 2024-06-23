@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { formatJSONDate } from 'yancey-js-util'
 import CircularLoading from '../../components/CircularLoading'
 import { WordList } from '../../types'
-import { GET } from '../../utils'
+import { GET } from '../../axios'
 
 const List: FC = () => {
   const [list, setList] = useState<WordList[] | null>(null)
