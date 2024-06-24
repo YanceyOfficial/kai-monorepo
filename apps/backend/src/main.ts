@@ -1,12 +1,9 @@
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
-import { configCORS } from './cors'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    cors: configCORS(process.env.NODE_ENV === 'production')
-  })
+  const app = await NestFactory.create(AppModule, { cors: true })
 
   const config = new DocumentBuilder()
     .setTitle('Kai Services')
@@ -15,7 +12,9 @@ async function bootstrap() {
     .addTag('kai')
     .build()
   const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('api', app, document)
+  SwaggerModule.setup('swagger', app, document)
+
+  app.setGlobalPrefix('api')
 
   await app.listen(process.env.PORT || 2998)
 }
