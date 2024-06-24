@@ -7,8 +7,7 @@ import { generateDatabaseURI } from 'src/utils'
   imports: [
     MongooseModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
-        uri: generateDatabaseURI(configService),
-        dbName: configService.get('DATABASE_COLLECTION')
+        uri: generateDatabaseURI(configService)
       }),
       inject: [ConfigService]
     })
