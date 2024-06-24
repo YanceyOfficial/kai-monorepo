@@ -2,10 +2,9 @@ import { AppBar, Box, Toolbar, Typography } from '@mui/material'
 import { SnackbarProvider } from 'notistack'
 import { FC } from 'react'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import SSOLoading from './components/SSOLoading'
+import { keycloak } from './axios'
 import Item from './containers/Item'
 import List from './containers/List'
-import useSSO from './hooks/useSSO'
 
 const router = createBrowserRouter([
   {
@@ -23,12 +22,6 @@ const router = createBrowserRouter([
 ])
 
 const Layouts: FC = () => {
-  const { keycloak, didInit } = useSSO()
-
-  if (!(didInit && keycloak?.authenticated)) {
-    return <SSOLoading />
-  }
-
   return (
     <SnackbarProvider
       anchorOrigin={{

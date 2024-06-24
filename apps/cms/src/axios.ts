@@ -1,17 +1,34 @@
 import axios, { AxiosResponse } from 'axios'
+import Keycloak from 'keycloak-js'
+
+export const keycloak = new Keycloak({
+  realm: import.meta.env.VITE_KEY_CLOAK_REALM || '',
+  url: import.meta.env.VITE_KEY_CLOAK_URL || '',
+  clientId: import.meta.env.VITE_KEY_CLOAK_CLIENT_ID || ''
+})
+
+await keycloak.init({
+  onLoad: 'login-required',
+  checkLoginIframe: false
+})
 
 axios.defaults.timeout = 5 * 10000
 axios.defaults.headers['Content-Type'] = 'application/json'
 axios.defaults.baseURL = import.meta.env.VITE_SERVICE_URL
-axios.interceptors.request.use(
-  (config) => {
-    config.headers['Authorization'] =
-      `Bearer ${window.localStorage.getItem('token')}`
-    return config
-  },
-  null,
-  { synchronous: true }
-)
+axios.interceptors.request.use(async (config) => {
+  if (keycloak.isTokenExpired(1 * 60)) {
+    try {
+      await keycloak.updateToken(1 * 60)
+    } catch (err) {
+      console.error('Failed to refresh token', err)
+      keycloak.logout()
+      throw new axios.Cancel('Token refresh failed, user logged out')
+    }
+  }
+
+  config.headers['Authorization'] = `Bearer ${keycloak.token}`
+  return config
+})
 
 // GET
 export function GET<T>(
