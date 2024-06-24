@@ -6,6 +6,5 @@ export const configCORS = (isEnvProduction: boolean) => ({
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   credentials: true,
   preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: '*'
+  optionsSuccessStatus: 204
 })
