@@ -113,7 +113,7 @@ const Item: FC = () => {
                     ({ word, explanation, phoneticNotation, examples }, i) => (
                       <Card
                         key={word}
-                        className="w-[calc((100vw-96px)/5)] flex-shrink-0"
+                        className="w-[calc((100vw-96px)/5)] flex-shrink-0 max-sm:w-full"
                       >
                         <CardContent className="flex flex-col gap-2">
                           <div className="font-bold text-lg flex items-center gap-2 flex-wrap">
@@ -187,7 +187,7 @@ const Item: FC = () => {
             label="Words"
             multiline
             rows={10}
-            className="w-[500px]"
+            className="w-full"
             onChange={(e) => setInput(e.target.value)}
           />
         </DialogContent>
