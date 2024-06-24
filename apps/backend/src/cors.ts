@@ -1,4 +1,4 @@
-const CORS_ORIGINS_PRODUCTION = ['https://cms.kai.yancey.app']
+const CORS_ORIGINS_PRODUCTION = ['https://cms.kai.yancey.app/']
 const CORS_ORIGINS_DEVELOPMENT = ['http://localhost:5173']
 
 export const configCORS = (isEnvProduction: boolean) => ({
