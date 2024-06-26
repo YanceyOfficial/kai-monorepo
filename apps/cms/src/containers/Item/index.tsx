@@ -138,6 +138,8 @@ const Item: FC = () => {
                             onBlur={handleBlur}
                             variant="filled"
                             size="small"
+                           
+                            
                           />
                           <div className="flex flex-col gap-2 mt-4">
                             {examples.map((example, j) => (
