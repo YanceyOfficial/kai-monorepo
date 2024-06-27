@@ -1,3 +1,4 @@
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded'
 import LoadingButton from '@mui/lab/LoadingButton'
 import {
   Button,
@@ -6,17 +7,18 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  IconButton,
   TextField
 } from '@mui/material'
 import { FieldArray, Form, Formik } from 'formik'
 import { enqueueSnackbar } from 'notistack'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { GET, PATCH, POST } from '../../axios'
 import AudioPlayer from '../../components/AudioPlayer'
 import CircularLoading from '../../components/CircularLoading'
 import { YOUDAO_VOICE_URL } from '../../constants'
 import { ChatCompletion, Word, WordList } from '../../types'
-import { GET, PATCH, POST } from '../../axios'
 
 const Item: FC = () => {
   const { id } = useParams()
@@ -37,7 +39,6 @@ const Item: FC = () => {
   }
 
   const update = async (words: Word[]) => {
-    console.log(wordList)
     await PATCH<WordList>(`/word/${id}`, {
       words
     })
@@ -47,12 +48,7 @@ const Item: FC = () => {
   }
 
   const findOne = useCallback(async () => {
-    const { data } = await GET<WordList>(`/word/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    const { data } = await GET<WordList>(`/word/${id}`)
 
     setWordList(data)
   }, [id])
@@ -138,25 +134,50 @@ const Item: FC = () => {
                             onBlur={handleBlur}
                             variant="filled"
                             size="small"
-                           
-                            
                           />
-                          <div className="flex flex-col gap-2 mt-4">
-                            {examples.map((example, j) => (
-                              <TextField
-                                key={j}
-                                multiline
-                                fullWidth
-                                hiddenLabel
-                                name={`words.${i}.examples.${j}`}
-                                value={example}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                variant="filled"
-                                size="small"
-                              />
-                            ))}
-                          </div>
+
+                          <FieldArray
+                            name={`words.${i}.examples`}
+                            render={({ insert, remove }) => (
+                              <>
+                                <div className="flex flex-col gap-2 mt-4">
+                                  {examples.map((example, j) => (
+                                    <div
+                                      className="flex items-center gap-1 mb-4"
+                                      key={j}
+                                    >
+                                      <TextField
+                                        multiline
+                                        fullWidth
+                                        hiddenLabel
+                                        name={`words.${i}.examples.${j}`}
+                                        value={example}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        variant="filled"
+                                        size="small"
+                                      />
+                                      <IconButton
+                                        size="small"
+                                        onClick={() => remove(j)}
+                                        className="h-8"
+                                      >
+                                        <RemoveCircleOutlineRoundedIcon />
+                                      </IconButton>
+                                    </div>
+                                  ))}
+
+                                  <Button
+                                    variant="contained"
+                                    onClick={() => insert(examples.length, '')}
+                                    className="w-[calc(100%-38px)]"
+                                  >
+                                    Add Example
+                                  </Button>
+                                </div>
+                              </>
+                            )}
+                          />
                         </CardContent>
                       </Card>
                     )

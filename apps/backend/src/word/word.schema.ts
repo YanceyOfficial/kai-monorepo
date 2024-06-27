@@ -19,7 +19,10 @@ export class Word {
   examples: string[]
 
   @Prop()
-  score: number
+  weightage: number
+
+  @Prop()
+  isMarked: boolean
 
   @Prop({ default: uuidv4 })
   _id: string

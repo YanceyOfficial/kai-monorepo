@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
+import { DEFAULT_WEIGHTAGE } from 'src/constants'
 import { Claims } from 'src/guard/types'
 import { CreateWordListDto } from './dto/create-word.dto'
 import { UpdateWordListDto } from './dto/update-word.dto'
-import { WordList } from './word.schema'
+import { Word, WordList } from './word.schema'
 
 @Injectable()
 export class WordService {
@@ -14,7 +15,7 @@ export class WordService {
     const count = await this.wordModel.countDocuments()
     const dto = {
       title: `Word List ${count + 1}`,
-      words: createWordListDto.words.map((word) => ({ ...word, score: 5 })),
+      words: createWordListDto.words.map((word) => ({ ...word, weightage: 5 })),
       userId: user?.sub
     }
     return this.wordModel.create(dto)
@@ -34,6 +35,32 @@ export class WordService {
     return wordList
   }
 
+  public async getChallengingWords(user: Claims) {
+    const wordList = await this.findAll(user)
+
+    const words: Word[] = []
+    wordList.forEach((item) => {
+      words.push(
+        ...item
+          .toObject()
+          .words.filter((word) => word.weightage > DEFAULT_WEIGHTAGE)
+      )
+    })
+
+    return { title: 'Challenging Words', words }
+  }
+
+  public async getMarkedWords(user: Claims) {
+    const wordList = await this.findAll(user)
+
+    const words: Word[] = []
+    wordList.forEach((item) => {
+      words.push(...item.toObject().words.filter((word) => word.isMarked))
+    })
+
+    return { title: 'Challenging Words', words }
+  }
+
   public async update(
     id: string,
     updateWordListDto: UpdateWordListDto,
@@ -45,12 +72,51 @@ export class WordService {
       throw new NotFoundException()
     }
 
-    return this.wordModel.findByIdAndUpdate(
-      id,
+    return this.wordModel.findByIdAndUpdate(id, updateWordListDto, {
+      new: true,
+      upsert: true
+    })
+  }
+
+  public async setIsMarked(
+    wordListId: string,
+    wordId: string,
+    isMarked: boolean,
+    user: Claims
+  ) {
+    const wordList = await this.wordModel.findById(wordListId)
+
+    if (wordList.userId !== user.sub) {
+      throw new NotFoundException()
+    }
+
+    return this.wordModel.updateOne(
+      { _id: wordListId, 'words._id': wordId },
+      { $set: { 'words.$.isMarked': isMarked } },
       {
-        updateWordListDto
-      },
-      { new: true }
+        new: true
+      }
+    )
+  }
+
+  public async setWeightage(
+    wordListId: string,
+    wordId: string,
+    weightage: number,
+    user: Claims
+  ) {
+    const wordList = await this.wordModel.findById(wordListId)
+
+    if (wordList.userId !== user.sub) {
+      throw new NotFoundException()
+    }
+
+    return this.wordModel.updateOne(
+      { _id: wordListId, 'words._id': wordId },
+      { $set: { 'words.$.weightage': weightage } },
+      {
+        new: true
+      }
     )
   }
 

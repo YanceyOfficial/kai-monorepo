@@ -3,13 +3,26 @@ import { DataGrid, GridColDef, gridClasses } from '@mui/x-data-grid'
 import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatJSONDate } from 'yancey-js-util'
+import { DELETE, GET } from '../../axios'
 import CircularLoading from '../../components/CircularLoading'
 import { WordList } from '../../types'
-import { GET } from '../../axios'
 
 const List: FC = () => {
+  const [loading, setLoading] = useState(false)
   const [list, setList] = useState<WordList[] | null>(null)
   const navigate = useNavigate()
+
+  const fetchData = async () => {
+    const { data } = await GET<WordList[]>('/word')
+    setList(data)
+  }
+
+  const removeOne = async (id: string) => {
+    setLoading(true)
+    await DELETE<WordList>(`/word/${id}`)
+    await fetchData()
+    setLoading(false)
+  }
 
   const columns: GridColDef[] = [
     { field: 'title', headerName: 'Title', resizable: false, width: 300 },
@@ -38,27 +51,28 @@ const List: FC = () => {
       field: '_id',
       headerName: 'Actions',
       resizable: false,
+      width: 300,
       renderCell: (params) => (
-        <Button
-          variant="text"
-          onClick={() => navigate(`/item/${params.value}`)}
-        >
-          Edit
-        </Button>
+        <>
+          <Button
+            variant="text"
+            onClick={() => navigate(`/item/${params.value}`)}
+          >
+            Edit
+          </Button>
+          <Button variant="text" onClick={() => removeOne(params.value)}>
+            Delete
+          </Button>
+        </>
       )
     }
   ]
-
-  const fetchData = async () => {
-    const { data } = await GET<WordList[]>('/word')
-    setList(data)
-  }
 
   useEffect(() => {
     fetchData()
   }, [])
 
-  if (!list) return <CircularLoading />
+  if (!list || loading) return <CircularLoading />
 
   return (
     <section>

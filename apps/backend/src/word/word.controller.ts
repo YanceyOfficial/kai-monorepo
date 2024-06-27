@@ -10,7 +10,9 @@ import {
 import { AuthenticatedUser } from 'nest-keycloak-connect'
 import { Claims } from 'src/guard/types'
 import { CreateWordListDto } from './dto/create-word.dto'
+import { MarkDto } from './dto/mark.dto'
 import { UpdateWordListDto } from './dto/update-word.dto'
+import { WeightageDto } from './dto/weightage.dto'
 import { WordService } from './word.service'
 
 @Controller('word')
@@ -18,7 +20,7 @@ export class WordController {
   constructor(private readonly wordService: WordService) {}
 
   @Post()
-  create(
+  public create(
     @Body() createWordListDto: CreateWordListDto,
     @AuthenticatedUser()
     user: Claims
@@ -27,7 +29,7 @@ export class WordController {
   }
 
   @Get()
-  findAll(
+  public findAll(
     @AuthenticatedUser()
     user: Claims
   ) {
@@ -35,7 +37,7 @@ export class WordController {
   }
 
   @Get(':id')
-  findOne(
+  public findOne(
     @Param('id') id: string,
     @AuthenticatedUser()
     user: Claims
@@ -43,8 +45,51 @@ export class WordController {
     return this.wordService.findOne(id, user)
   }
 
+  @Get('/challenging')
+  public getChallengingWords(
+    @AuthenticatedUser()
+    user: Claims
+  ) {
+    return this.wordService.getChallengingWords(user)
+  }
+
+  @Get('marked')
+  public getMarkedWords(
+    @AuthenticatedUser()
+    user: Claims
+  ) {
+    return this.wordService.getMarkedWords(user)
+  }
+
+  @Post('/mark/:id/:wordId')
+  public setWeightage(
+    @Param('id') id: string,
+    @Param('wordId') wordId: string,
+    @Body() markDto: MarkDto,
+    @AuthenticatedUser()
+    user: Claims
+  ) {
+    return this.wordService.setIsMarked(id, wordId, markDto.isMarked, user)
+  }
+
+  @Post('/weightage/:id/:wordId')
+  public setIsMarked(
+    @Param('id') id: string,
+    @Param('wordId') wordId: string,
+    @Body() wightageDto: WeightageDto,
+    @AuthenticatedUser()
+    user: Claims
+  ) {
+    return this.wordService.setWeightage(
+      id,
+      wordId,
+      wightageDto.weightage,
+      user
+    )
+  }
+
   @Patch(':id')
-  update(
+  public update(
     @Param('id') id: string,
     @Body() updateWordListDto: UpdateWordListDto,
     @AuthenticatedUser()
@@ -54,7 +99,7 @@ export class WordController {
   }
 
   @Delete(':id')
-  remove(
+  public remove(
     @Param('id') id: string,
     @AuthenticatedUser()
     user: Claims

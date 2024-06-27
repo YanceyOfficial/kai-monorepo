@@ -1,1 +1,1 @@
-export const DEFAULT_SCORE = 5
+export const DEFAULT_WEIGHTAGE = 5

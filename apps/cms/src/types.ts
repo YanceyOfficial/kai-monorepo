@@ -4,7 +4,7 @@ export interface Word {
   word: string
   examples: string[]
   _id: string
-  score: number
+  weightage: number
 }
 
 export interface WordList {
@@ -18,7 +18,7 @@ export interface WordListToChatGPTDto {
 }
 
 export interface CreateWordListDto {
-  words: Exclude<Word, '_id' | 'score'>
+  words: Exclude<Word, '_id' | 'weightage'>
 }
 
 export type UpdateWordListDto = CreateWordListDto
