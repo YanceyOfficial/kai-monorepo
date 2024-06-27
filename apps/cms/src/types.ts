@@ -1,10 +1,11 @@
 export interface Word {
+  _id: string
   explanation: string
   phoneticNotation: string
   word: string
   examples: string[]
-  _id: string
   weightage: number
+  isMarked: boolean
 }
 
 export interface WordList {
@@ -18,7 +19,7 @@ export interface WordListToChatGPTDto {
 }
 
 export interface CreateWordListDto {
-  words: Exclude<Word, '_id' | 'weightage'>
+  words: Exclude<Word, '_id' | 'weightage' | 'isMarked'>
 }
 
 export type UpdateWordListDto = CreateWordListDto
