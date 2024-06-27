@@ -76,7 +76,7 @@ const List: FC = () => {
 
   return (
     <section>
-      <section className="mb-4 flex w-full justify-end">
+      <section className="flex mb-4 w-full justify-end">
         <Button variant="contained" onClick={() => navigate('/item')}>
           Create a Word List
         </Button>

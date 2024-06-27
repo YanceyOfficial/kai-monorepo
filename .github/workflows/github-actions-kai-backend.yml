@@ -30,21 +30,23 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p ./apps/backend
-          echo "AZURE_OPENAI_KEY=${{ vars.AZURE_OPENAI_KEY }}" >> ./apps/backend/.env
-          echo "AZURE_OPENAI_ENDPOINT=${{ vars.AZURE_OPENAI_ENDPOINT }}" >> ./apps/backend/.env
-          echo "AZURE_OPENAI_DEPLOMENT_ID=${{ vars.AZURE_OPENAI_DEPLOMENT_ID }}" >> ./apps/backend/.env
-          echo "DATABASE_HOST=${{ vars.DATABASE_HOST }}" >> ./apps/backend/.env
-          echo "DATABASE_PORT=${{ vars.DATABASE_PORT }}" >> ./apps/backend/.env
-          echo "DATABASE_USER=${{ vars.DATABASE_USER }}" >> ./apps/backend/.env
-          echo "DATABASE_PWD=${{ vars.DATABASE_PWD }}" >> ./apps/backend/.env
-          echo "DATABASE_COLLECTION=${{ vars.DATABASE_COLLECTION }}" >> ./apps/backend/.env
-          echo "KEY_CLOAK_URL=${{ vars.KEY_CLOAK_URL }}" >> ./apps/backend/.env
-          echo "KEY_CLOAK_REALM=${{ vars.KEY_CLOAK_REALM }}" >> ./apps/backend/.env
-          echo "KEY_CLOAK_CLIENT_ID=${{ vars.KEY_CLOAK_CLIENT_ID }}" >> ./apps/backend/.env
-          echo "KEY_CLOAK_CLIENT_SECRET=${{ vars.KEY_CLOAK_CLIENT_SECRET }}" >> ./apps/backend/.env
+          echo "AZURE_OPENAI_KEY=${{ secrets.AZURE_OPENAI_KEY }}" >> ./apps/backend/.env
+          echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> ./apps/backend/.env
+          echo "AZURE_OPENAI_DEPLOMENT_ID=${{ secrets.AZURE_OPENAI_DEPLOMENT_ID }}" >> ./apps/backend/.env
+          echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> ./apps/backend/.env
+          echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> ./apps/backend/.env
+          echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> ./apps/backend/.env
+          echo "DATABASE_PWD=${{ secrets.DATABASE_PWD }}" >> ./apps/backend/.env
+          echo "DATABASE_COLLECTION=${{ secrets.DATABASE_COLLECTION }}" >> ./apps/backend/.env
+          echo "KEY_CLOAK_URL=${{ secrets.KEY_CLOAK_URL }}" >> ./apps/backend/.env
+          echo "KEY_CLOAK_REALM=${{ secrets.KEY_CLOAK_REALM }}" >> ./apps/backend/.env
+          echo "KEY_CLOAK_CLIENT_ID=${{ secrets.KEY_CLOAK_CLIENT_ID }}" >> ./apps/backend/.env
+          echo "KEY_CLOAK_CLIENT_SECRET=${{ secrets.KEY_CLOAK_CLIENT_SECRET }}" >> ./apps/backend/.env
 
-      - name: Pre compilation
-        run: npm run build
+      - name: Compilation
+          run:  |
+            cd ./apps/backend
+            npm run build
 
       # テスト成功時はこちらのステップが実行される
       - name: Slack Notification on Success at Testing Stage
@@ -91,12 +93,18 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p ./apps/backend
-          echo "VITE_SERVICE_URL=${{ vars.VITE_SERVICE_URL }}" >> ./apps/backend/.env
-          echo "VITE_KEY_CLOAK_CLIENT_ID=${{ vars.VITE_KEY_CLOAK_CLIENT_ID }}" >> ./apps/backend/.env
-          echo "VITE_KEY_CLOAK_REALM=${{ vars.VITE_KEY_CLOAK_REALM }}" >> ./apps/backend/.env
-          echo "VITE_KEY_CLOAK_URL=${{ vars.VITE_KEY_CLOAK_URL }}" >> ./apps/backend/.env
-          cd ./app/backend
-          cat .env
+          echo "AZURE_OPENAI_KEY=${{ secrets.AZURE_OPENAI_KEY }}" >> ./apps/backend/.env
+          echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> ./apps/backend/.env
+          echo "AZURE_OPENAI_DEPLOMENT_ID=${{ secrets.AZURE_OPENAI_DEPLOMENT_ID }}" >> ./apps/backend/.env
+          echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> ./apps/backend/.env
+          echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> ./apps/backend/.env
+          echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> ./apps/backend/.env
+          echo "DATABASE_PWD=${{ secrets.DATABASE_PWD }}" >> ./apps/backend/.env
+          echo "DATABASE_COLLECTION=${{ secrets.DATABASE_COLLECTION }}" >> ./apps/backend/.env
+          echo "KEY_CLOAK_URL=${{ secrets.KEY_CLOAK_URL }}" >> ./apps/backend/.env
+          echo "KEY_CLOAK_REALM=${{ secrets.KEY_CLOAK_REALM }}" >> ./apps/backend/.env
+          echo "KEY_CLOAK_CLIENT_ID=${{ secrets.KEY_CLOAK_CLIENT_ID }}" >> ./apps/backend/.env
+          echo "KEY_CLOAK_CLIENT_SECRET=${{ secrets.KEY_CLOAK_CLIENT_SECRET }}" >> ./apps/backend/.env
 
       - name: Compilation
         run: |

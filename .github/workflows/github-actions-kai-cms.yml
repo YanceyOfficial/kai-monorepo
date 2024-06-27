@@ -30,13 +30,15 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p ./apps/cms
-          echo "VITE_SERVICE_URL=${{ vars.VITE_SERVICE_URL }}" >> ./apps/cms/.env
-          echo "VITE_KEY_CLOAK_CLIENT_ID=${{ vars.VITE_KEY_CLOAK_CLIENT_ID }}" >> ./apps/cms/.env
-          echo "VITE_KEY_CLOAK_REALM=${{ vars.VITE_KEY_CLOAK_REALM }}" >> ./apps/cms/.env
-          echo "VITE_KEY_CLOAK_URL=${{ vars.VITE_KEY_CLOAK_URL }}" >> ./apps/cms/.env
+          echo "VITE_SERVICE_URL=${{ secrets.VITE_SERVICE_URL }}" >> ./apps/cms/.env
+          echo "VITE_KEY_CLOAK_CLIENT_ID=${{ secrets.VITE_KEY_CLOAK_CLIENT_ID }}" >> ./apps/cms/.env
+          echo "VITE_KEY_CLOAK_REALM=${{ secrets.VITE_KEY_CLOAK_REALM }}" >> ./apps/cms/.env
+          echo "VITE_KEY_CLOAK_URL=${{ secrets.VITE_KEY_CLOAK_URL }}" >> ./apps/cms/.env
 
-      - name: Pre compilation
-        run: npm run build
+     - name: Compilation
+        run:  |
+          cd ./apps/cms
+          npm run build
 
       # テスト成功時はこちらのステップが実行される
       - name: Slack Notification on Success at Testing Stage
@@ -83,13 +85,10 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p ./apps/cms
-          echo "VITE_SERVICE_URL=${{ vars.VITE_SERVICE_URL }}" >> ./apps/cms/.env
-          echo "VITE_KEY_CLOAK_CLIENT_ID=${{ vars.VITE_KEY_CLOAK_CLIENT_ID }}" >> ./apps/cms/.env
-          echo "VITE_KEY_CLOAK_REALM=${{ vars.VITE_KEY_CLOAK_REALM }}" >> ./apps/cms/.env
-          echo "VITE_KEY_CLOAK_URL=${{ vars.VITE_KEY_CLOAK_URL }}" >> ./apps/cms/.env
-          cd ./apps/cms
-          cat .env
-
+          echo "VITE_SERVICE_URL=${{ secrets.VITE_SERVICE_URL }}" >> ./apps/cms/.env
+          echo "VITE_KEY_CLOAK_CLIENT_ID=${{ secrets.VITE_KEY_CLOAK_CLIENT_ID }}" >> ./apps/cms/.env
+          echo "VITE_KEY_CLOAK_REALM=${{ secrets.VITE_KEY_CLOAK_REALM }}" >> ./apps/cms/.env
+          echo "VITE_KEY_CLOAK_URL=${{ secrets.VITE_KEY_CLOAK_URL }}" >> ./apps/cms/.env
 
       - name: Compilation
         run:  |
