@@ -97,7 +97,9 @@ jobs:
           echo "VITE_KEY_CLOAK_URL=${{ vars.VITE_KEY_CLOAK_URL }}" >> ./apps/backend/.env
 
       - name: Compilation
-        run: npm run build
+        run: |
+          cd ./apps/backend
+          npm run build
 
       - name: Prepare files for deployment
         run: |
