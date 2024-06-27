@@ -1,8 +1,8 @@
 export interface Word {
   _id: string
-  explanation: string
-  phoneticNotation: string
   word: string
+  phoneticNotation: string
+  explanation: string
   examples: string[]
   weightage: number
   isMarked: boolean
