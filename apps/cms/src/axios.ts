@@ -31,10 +31,10 @@ axios.interceptors.request.use(async (config) => {
 })
 
 // GET
-export function GET<T>(
+export const GET = <T>(
   url: string,
   params?: unknown
-): Promise<AxiosResponse<T>> {
+): Promise<AxiosResponse<T>> => {
   return new Promise((resolve, reject) => {
     axios
       .get(url, { params })
@@ -48,10 +48,10 @@ export function GET<T>(
 }
 
 // POST
-export function POST<T>(
+export const POST = <T>(
   url: string,
   params?: unknown
-): Promise<AxiosResponse<T>> {
+): Promise<AxiosResponse<T>> => {
   return new Promise((resolve, reject) => {
     axios
       .post(url, params)
@@ -70,10 +70,10 @@ export function POST<T>(
 }
 
 // PUT
-export function PUT<T>(
+export const PUT = <T>(
   url: string,
   params?: unknown
-): Promise<AxiosResponse<T>> {
+): Promise<AxiosResponse<T>> => {
   return new Promise((resolve, reject) => {
     axios
       .put(url, params)
@@ -87,10 +87,10 @@ export function PUT<T>(
 }
 
 // PATCH
-export function PATCH<T>(
+export const PATCH = <T>(
   url: string,
   params?: unknown
-): Promise<AxiosResponse<T>> {
+): Promise<AxiosResponse<T>> => {
   return new Promise((resolve, reject) => {
     axios
       .patch(url, params)
@@ -104,10 +104,10 @@ export function PATCH<T>(
 }
 
 // DELETE
-export function DELETE<T>(
+export const DELETE = <T>(
   url: string,
   params?: unknown
-): Promise<AxiosResponse<T>> {
+): Promise<AxiosResponse<T>> => {
   return new Promise((resolve, reject) => {
     axios
       .delete(url, { data: params })
