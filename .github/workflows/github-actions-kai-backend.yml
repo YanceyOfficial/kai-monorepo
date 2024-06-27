@@ -135,7 +135,8 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            export PATH=$PATH:/usr/bin:/usr/local/bin
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
             cd /var/www/kai-monorepo/apps/backend
             pm2 reload ecosystem.config.js
 

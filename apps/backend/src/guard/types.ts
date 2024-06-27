@@ -21,7 +21,6 @@ export interface Claims {
   nonce: string
   session_state: string
   acr: string
-  'allowed-origins': string[]
   realm_access: Realms
   resource_access: ResourceAccess
   scope: string
@@ -32,4 +31,5 @@ export interface Claims {
   given_name: string
   family_name: string
   email: string
+  'allowed-origins': string[]
 }
