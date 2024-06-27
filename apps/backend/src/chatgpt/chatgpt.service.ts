@@ -66,9 +66,7 @@ This is a example:
         {
           role: 'user',
           // FIXME:
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          content: words.words.join('; ')
+          content: words.join('; ')
         }
       ])
 

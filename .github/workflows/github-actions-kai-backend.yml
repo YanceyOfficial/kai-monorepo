@@ -44,9 +44,9 @@ jobs:
           echo "KEY_CLOAK_CLIENT_SECRET=${{ secrets.KEY_CLOAK_CLIENT_SECRET }}" >> ./apps/backend/.env
 
       - name: Compilation
-          run: |
-            cd ./apps/backend
-            npm run build
+        run: |
+          cd ./apps/backend
+          npm run build
 
       # テスト成功時はこちらのステップが実行される
       - name: Slack Notification on Success at Testing Stage

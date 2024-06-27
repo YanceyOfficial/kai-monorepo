@@ -91,7 +91,7 @@ jobs:
           echo "VITE_KEY_CLOAK_URL=${{ secrets.VITE_KEY_CLOAK_URL }}" >> ./apps/cms/.env
 
       - name: Compilation
-        run:  |
+        run: |
           cd ./apps/cms
           npm run build
 
