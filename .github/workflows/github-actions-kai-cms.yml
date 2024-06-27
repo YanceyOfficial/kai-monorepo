@@ -87,6 +87,8 @@ jobs:
           echo "VITE_KEY_CLOAK_CLIENT_ID=${{ vars.VITE_KEY_CLOAK_CLIENT_ID }}" >> ./apps/cms/.env
           echo "VITE_KEY_CLOAK_REALM=${{ vars.VITE_KEY_CLOAK_REALM }}" >> ./apps/cms/.env
           echo "VITE_KEY_CLOAK_URL=${{ vars.VITE_KEY_CLOAK_URL }}" >> ./apps/cms/.env
+          cat .env
+
 
       - name: Compilation
         run:  |
