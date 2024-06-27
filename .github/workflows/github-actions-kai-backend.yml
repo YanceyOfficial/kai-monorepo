@@ -44,7 +44,7 @@ jobs:
           echo "KEY_CLOAK_CLIENT_SECRET=${{ secrets.KEY_CLOAK_CLIENT_SECRET }}" >> ./apps/backend/.env
 
       - name: Compilation
-          run:  |
+          run: |
             cd ./apps/backend
             npm run build
 

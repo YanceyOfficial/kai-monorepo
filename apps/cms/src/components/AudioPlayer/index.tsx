@@ -18,12 +18,12 @@ const AudioPlayer: FC<Props> = ({ audioUrl }) => {
     }
   }
 
-  const handleEnded = () => {
-    setPlay(false)
-  }
-
   const handleCanPlay = () => {
     setCanPlay(true)
+  }
+
+  const handleEnded = () => {
+    setPlay(false)
   }
 
   useEffect(() => {

@@ -6,6 +6,9 @@ export type WordDocument = HydratedDocument<WordList>
 
 @Schema()
 export class Word {
+  @Prop({ default: uuidv4 })
+  _id: string
+
   @Prop({ required: true })
   word: string
 
@@ -23,9 +26,6 @@ export class Word {
 
   @Prop()
   isMarked: boolean
-
-  @Prop({ default: uuidv4 })
-  _id: string
 }
 
 @Schema({ timestamps: true })
