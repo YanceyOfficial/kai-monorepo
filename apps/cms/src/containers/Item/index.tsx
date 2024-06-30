@@ -10,6 +10,7 @@ import {
   IconButton,
   TextField
 } from '@mui/material'
+import { AxiosResponse } from 'axios'
 import { FieldArray, Form, Formik } from 'formik'
 import { enqueueSnackbar } from 'notistack'
 import { FC, useCallback, useEffect, useState } from 'react'
@@ -53,21 +54,33 @@ const Item: FC = () => {
     setWordList(data)
   }, [id])
 
-  const getAI = async () => {
+  const batchGetAI = async () => {
     setLoading(true)
+
+    const wordsInput = input.split('\n').map((word) => word.trim())
+    const promises: Promise<AxiosResponse<ChatCompletion>>[] = []
+    for (let i = 0; i < wordsInput.length; i += 10) {
+      promises.push(
+        POST<ChatCompletion>('/chatgpt', {
+          words: wordsInput.slice(i, i + 10)
+        })
+      )
+    }
+
     try {
-      const { data } = await POST<ChatCompletion>('/chatgpt', {
-        words: input.split('\n').map((word) => word.trim())
+      const res = await Promise.all(promises)
+      const words: Word[] = []
+      res.forEach(({ data }) => {
+        words.push(...JSON.parse(data.choices[0].message.content))
       })
 
       setWordList(
         wordList
           ? {
-              ...wordList,
-              words: JSON.parse(data.choices[0].message.content)
+              ...wordList
             }
           : {
-              words: JSON.parse(data.choices[0].message.content)
+              words
             }
       )
     } finally {
@@ -106,14 +119,14 @@ const Item: FC = () => {
               render={() => (
                 <>
                   {values?.words?.map(
-                    ({ word, explanation, phoneticNotation, examples }, i) => (
+                    ({ name, explanation, phoneticNotation, examples }, i) => (
                       <Card
-                        key={word}
+                        key={name}
                         className="w-[calc((100vw-96px)/5)] flex-shrink-0 max-sm:w-full"
                       >
                         <CardContent className="flex flex-col gap-2">
                           <div className="font-bold text-lg flex items-center gap-2 flex-wrap">
-                            <span>{word}</span>
+                            <span>{name}</span>
                             <span
                               className="font-normal text-sm"
                               color="text.secondary"
@@ -121,7 +134,7 @@ const Item: FC = () => {
                               {phoneticNotation}
                             </span>
                             <AudioPlayer
-                              audioUrl={`${YOUDAO_VOICE_URL}${word}`}
+                              audioUrl={`${YOUDAO_VOICE_URL}${name}`}
                             />
                           </div>
                           <TextField
@@ -218,7 +231,7 @@ const Item: FC = () => {
           <Button onClick={() => setShowDialog(false)}>Cancel</Button>
           <LoadingButton
             variant="contained"
-            onClick={getAI}
+            onClick={batchGetAI}
             loading={loading}
             disabled={!input.trim()}
           >

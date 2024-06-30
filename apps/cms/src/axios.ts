@@ -12,7 +12,7 @@ await keycloak.init({
   checkLoginIframe: false
 })
 
-axios.defaults.timeout = 5 * 10000
+axios.defaults.timeout = 5 * 60 * 1000
 axios.defaults.headers['Content-Type'] = 'application/json'
 axios.defaults.baseURL = import.meta.env.VITE_SERVICE_URL
 axios.interceptors.request.use(async (config) => {
