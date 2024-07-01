@@ -45,6 +45,9 @@ export class Word {
   @Prop({ required: true })
   phoneticNotation: string
 
+  @Prop({ type: [String], required: true })
+  syllabification: string[]
+
   @Prop([String])
   examples: string[]
 

@@ -32,6 +32,9 @@ export class WordDto {
   phoneticNotation: string
 
   @ApiProperty()
+  syllabification: string[]
+
+  @ApiProperty()
   examples: string[]
 }
 
