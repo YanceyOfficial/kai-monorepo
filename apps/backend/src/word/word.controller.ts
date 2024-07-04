@@ -62,7 +62,7 @@ export class WordController {
   }
 
   @Post('/mark/:id/:wordId')
-  public setWeightage(
+  public setIsMarked(
     @Param('id') id: string,
     @Param('wordId') wordId: string,
     @Body() markDto: MarkDto,
@@ -73,19 +73,14 @@ export class WordController {
   }
 
   @Post('/weightage/:id/:wordId')
-  public setIsMarked(
+  public setWeightage(
     @Param('id') id: string,
     @Param('wordId') wordId: string,
     @Body() wightageDto: WeightageDto,
     @AuthenticatedUser()
     user: Claims
   ) {
-    return this.wordService.setWeightage(
-      id,
-      wordId,
-      wightageDto.weightage,
-      user
-    )
+    return this.wordService.setWeightage(id, wordId, wightageDto.action, user)
   }
 
   @Patch(':id')

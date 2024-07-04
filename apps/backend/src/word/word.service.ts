@@ -5,6 +5,7 @@ import { DEFAULT_WEIGHTAGE } from 'src/constants'
 import { Claims } from 'src/guard/types'
 import { CreateWordListDto } from './dto/create-word.dto'
 import { UpdateWordListDto } from './dto/update-word.dto'
+import { WeightageAction } from './dto/weightage.dto'
 import { Word, WordList } from './word.schema'
 
 @Injectable()
@@ -102,7 +103,7 @@ export class WordService {
   public async setWeightage(
     wordListId: string,
     wordId: string,
-    weightage: number,
+    action: WeightageAction,
     user: Claims
   ) {
     const wordList = await this.wordModel.findById(wordListId)
@@ -111,9 +112,18 @@ export class WordService {
       throw new NotFoundException()
     }
 
+    const weightage =
+      wordList.toObject().words.find((word) => word._id === wordId)
+        ?.weightage || DEFAULT_WEIGHTAGE
+
     return this.wordModel.updateOne(
       { _id: wordListId, 'words._id': wordId },
-      { $set: { 'words.$.weightage': weightage } },
+      {
+        $set: {
+          'words.$.weightage':
+            action === WeightageAction.Addiation ? weightage + 1 : weightage - 1
+        }
+      },
       {
         new: true
       }
