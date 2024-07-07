@@ -6,6 +6,11 @@ import { keycloak } from './axios'
 import Item from './containers/Item'
 import List from './containers/List'
 
+const safeAreaTop =
+  Number(
+    new window.URLSearchParams(window.location.search).get('safeAreaTop')
+  ) || 0
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -30,7 +35,11 @@ const Layouts: FC = () => {
       }}
     >
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar>
+        <AppBar
+          style={{
+            paddingTop: safeAreaTop
+          }}
+        >
           <Toolbar>
             <Typography
               variant="h6"
@@ -47,7 +56,10 @@ const Layouts: FC = () => {
           </Toolbar>
         </AppBar>
       </Box>
-      <section className="p-4 pt-20 bg-gray-50 min-h-screen">
+      <section
+        className="p-4 bg-gray-50 min-h-screen"
+        style={{ paddingTop: `calc(${safeAreaTop}px + 5rem)` }}
+      >
         <RouterProvider router={router} />
       </section>
     </SnackbarProvider>
