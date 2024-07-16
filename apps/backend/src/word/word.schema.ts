@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { HydratedDocument, now } from 'mongoose'
+import { HydratedDocument } from 'mongoose'
 import { DEFAULT_WEIGHTAGE } from 'src/constants'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -75,10 +75,10 @@ export class WordList {
   @Prop()
   userId: string
 
-  @Prop({ default: now() })
+  @Prop({ efault: Date.now })
   createdAt: Date
 
-  @Prop({ default: now() })
+  @Prop({ default: Date.now })
   updatedAt: Date
 }
 
