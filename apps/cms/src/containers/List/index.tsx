@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { formatJSONDate } from 'yancey-js-util'
 import { DELETE, GET } from '../../axios'
 import CircularLoading from '../../components/CircularLoading'
+import ConfirmPopover from '../../components/ConfirmPopover'
 import { WordList } from '../../types'
 
 const List: FC = () => {
@@ -60,8 +61,11 @@ const List: FC = () => {
           >
             Edit
           </Button>
-          <Button variant="text" onClick={() => removeOne(params.value)}>
-            Delete
+
+          <Button variant="text">
+            <ConfirmPopover onOk={() => removeOne(params.value)}>
+              Delete
+            </ConfirmPopover>
           </Button>
         </>
       )
