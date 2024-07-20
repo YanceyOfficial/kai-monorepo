@@ -7,10 +7,17 @@ export const keycloak = new Keycloak({
   clientId: import.meta.env.VITE_KEY_CLOAK_CLIENT_ID || ''
 })
 
-await keycloak.init({
-  onLoad: 'check-sso',
-  checkLoginIframe: false
-})
+await keycloak
+  .init({
+    onLoad: 'check-sso',
+    checkLoginIframe: false
+  })
+  .then((authenticated) => {
+    if (!authenticated) {
+      keycloak.login()
+    }
+  })
+  .catch(() => keycloak.login())
 
 axios.defaults.timeout = 5 * 60 * 1000
 axios.defaults.headers['Content-Type'] = 'application/json'
