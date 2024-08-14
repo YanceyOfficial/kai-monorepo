@@ -8,7 +8,7 @@ export const keycloak = new Keycloak({
 })
 
 await keycloak.init({
-  onLoad: 'check-sso',
+  onLoad: 'login-required',
   checkLoginIframe: false
 })
 
