@@ -28,11 +28,10 @@ const List: FC = () => {
   const columns: GridColDef[] = [
     { field: 'title', headerName: 'Title', resizable: false, width: 300 },
     {
-      field: 'undefined',
+      field: 'wordCount',
       headerName: 'Words Count',
       width: 120,
-      resizable: false,
-      valueGetter: (_, row) => row.words.length
+      resizable: false
     },
     {
       field: 'createdAt',

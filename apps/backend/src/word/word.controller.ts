@@ -47,18 +47,20 @@ export class WordController {
 
   @Get('/challenging')
   public getChallengingWords(
+    @Param('id') id: string,
     @AuthenticatedUser()
     user: Claims
   ) {
-    return this.wordService.getChallengingWords(user)
+    return this.wordService.getChallengingWords(id, user)
   }
 
   @Get('marked')
   public getMarkedWords(
+    @Param('id') id: string,
     @AuthenticatedUser()
     user: Claims
   ) {
-    return this.wordService.getMarkedWords(user)
+    return this.wordService.getMarkedWords(id, user)
   }
 
   @Post('/mark/:id/:wordId')

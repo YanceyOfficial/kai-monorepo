@@ -6,7 +6,7 @@ import { Claims } from 'src/guard/types'
 import { CreateWordListDto } from './dto/create-word.dto'
 import { UpdateWordListDto } from './dto/update-word.dto'
 import { WeightageAction } from './dto/weightage.dto'
-import { Word, WordList } from './word.schema'
+import { WordList } from './word.schema'
 
 @Injectable()
 export class WordService {
@@ -23,7 +23,16 @@ export class WordService {
   }
 
   public async findAll(user: Claims) {
-    return this.wordModel.find({ userId: user.sub })
+    const wordList = await this.wordModel.find({ userId: user.sub })
+
+    return wordList.map((item) => {
+      const { words, ...rest } = item.toObject()
+
+      return {
+        ...rest,
+        wordCount: words.length
+      }
+    })
   }
 
   public async findOne(id: string, user: Claims) {
@@ -36,30 +45,22 @@ export class WordService {
     return wordList
   }
 
-  public async getChallengingWords(user: Claims) {
-    const wordList = await this.findAll(user)
+  public async getChallengingWords(id: string, user: Claims) {
+    const { words } = await this.findOne(id, user)
 
-    const words: Word[] = []
-    wordList.forEach((item) => {
-      words.push(
-        ...item
-          .toObject()
-          .words.filter((word) => word.weightage > DEFAULT_WEIGHTAGE)
-      )
-    })
-
-    return { title: 'Challenging Words', words }
+    return {
+      title: 'Challenging Words',
+      words: words.filter((word) => word.weightage > DEFAULT_WEIGHTAGE)
+    }
   }
 
-  public async getMarkedWords(user: Claims) {
-    const wordList = await this.findAll(user)
+  public async getMarkedWords(id: string, user: Claims) {
+    const { words } = await this.findOne(id, user)
 
-    const words: Word[] = []
-    wordList.forEach((item) => {
-      words.push(...item.toObject().words.filter((word) => word.isMarked))
-    })
-
-    return { title: 'Challenging Words', words }
+    return {
+      title: 'Marked Words',
+      words: words.filter((word) => word.isMarked)
+    }
   }
 
   public async update(
