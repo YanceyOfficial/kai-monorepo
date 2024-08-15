@@ -205,7 +205,11 @@ const Item: FC = () => {
                 </Button>
               )}
 
-              <Button type="submit" variant="contained" disabled={!wordList}>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={!wordList || loading}
+              >
                 {isUpdating ? 'Update' : 'Create'}
               </Button>
             </section>
