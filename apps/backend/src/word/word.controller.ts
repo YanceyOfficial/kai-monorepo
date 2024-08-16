@@ -5,102 +5,56 @@ import {
   Get,
   Param,
   Patch,
-  Post
+  Post,
+  Query,
+  UsePipes,
+  ValidationPipe
 } from '@nestjs/common'
-import { AuthenticatedUser } from 'nest-keycloak-connect'
-import { Claims } from 'src/guard/types'
-import { CreateWordListDto } from './dto/create-word.dto'
-import { MarkDto } from './dto/mark.dto'
+import { PaginationDto } from './dto/pagination.dto'
+import { StatusDto } from './dto/status.dto'
 import { UpdateWordListDto } from './dto/update-word.dto'
-import { WeightageDto } from './dto/weightage.dto'
 import { WordService } from './word.service'
 
 @Controller('word')
 export class WordController {
   constructor(private readonly wordService: WordService) {}
 
-  @Post()
-  public create(
-    @Body() createWordListDto: CreateWordListDto,
-    @AuthenticatedUser()
-    user: Claims
-  ) {
-    return this.wordService.create(createWordListDto, user)
-  }
-
   @Get()
-  public findAll(
-    @AuthenticatedUser()
-    user: Claims
-  ) {
-    return this.wordService.findAll(user)
+  @UsePipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true }
+    })
+  )
+  public findByPagination(@Query() pagination: PaginationDto) {
+    return this.wordService.findByPagination(pagination)
   }
 
-  @Get(':id')
-  public findOne(
-    @Param('id') id: string,
-    @AuthenticatedUser()
-    user: Claims
-  ) {
-    return this.wordService.findOne(id, user)
+  @Post()
+  public batchInsert(@Body() updateWordListDto: UpdateWordListDto) {
+    return this.wordService.batchInsert(updateWordListDto)
   }
 
-  @Get('/challenging')
-  public getChallengingWords(
-    @Param('id') id: string,
-    @AuthenticatedUser()
-    user: Claims
-  ) {
-    return this.wordService.getChallengingWords(id, user)
+  @Get('/:id')
+  public findOne(@Param('id') id: string) {
+    return this.wordService.findOne(id)
   }
 
-  @Get('marked')
-  public getMarkedWords(
-    @Param('id') id: string,
-    @AuthenticatedUser()
-    user: Claims
-  ) {
-    return this.wordService.getMarkedWords(id, user)
-  }
-
-  @Post('/mark/:id/:wordId')
-  public setIsMarked(
-    @Param('id') id: string,
-    @Param('wordId') wordId: string,
-    @Body() markDto: MarkDto,
-    @AuthenticatedUser()
-    user: Claims
-  ) {
-    return this.wordService.setIsMarked(id, wordId, markDto.isMarked, user)
-  }
-
-  @Post('/weightage/:id/:wordId')
-  public setWeightage(
-    @Param('id') id: string,
-    @Param('wordId') wordId: string,
-    @Body() wightageDto: WeightageDto,
-    @AuthenticatedUser()
-    user: Claims
-  ) {
-    return this.wordService.setWeightage(id, wordId, wightageDto.action, user)
+  @Post('/status/:id')
+  public setStatus(@Param('id') id: string, @Body() statusDto: StatusDto) {
+    return this.wordService.setStatus(id, statusDto)
   }
 
   @Patch(':id')
-  public update(
+  public updateOne(
     @Param('id') id: string,
-    @Body() updateWordListDto: UpdateWordListDto,
-    @AuthenticatedUser()
-    user: Claims
+    @Body() updateWordListDto: UpdateWordListDto
   ) {
-    return this.wordService.update(id, updateWordListDto, user)
+    return this.wordService.updateOne(id, updateWordListDto)
   }
 
   @Delete(':id')
-  public remove(
-    @Param('id') id: string,
-    @AuthenticatedUser()
-    user: Claims
-  ) {
-    return this.wordService.remove(id, user)
+  public removeOne(@Param('id') id: string) {
+    return this.wordService.removeOne(id)
   }
 }

@@ -1,1 +1,1 @@
-export const DEFAULT_WEIGHTAGE = 5
+export const DEFAULT_FACTOR = 3

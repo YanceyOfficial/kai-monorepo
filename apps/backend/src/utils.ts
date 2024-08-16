@@ -11,7 +11,5 @@ export const generateDatabaseURI = (configService: ConfigService) => {
   const auth = `${userName}:${userPwd}`
   const connection = `${host}:${port}`
 
-  return configService.get('NODE_ENV') === 'production'
-    ? `${prefix}${auth}@${connection}/${dbName}`
-    : `${prefix}${connection}/${dbName}`
+  return `${prefix}${auth}@${connection}/${dbName}`
 }
