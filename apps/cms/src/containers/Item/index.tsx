@@ -13,13 +13,13 @@ import {
 import { AxiosResponse } from 'axios'
 import { FieldArray, Form, Formik } from 'formik'
 import { enqueueSnackbar } from 'notistack'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { GET, PATCH, POST } from '../../axios'
 import AudioPlayer from '../../components/AudioPlayer'
 import CircularLoading from '../../components/CircularLoading'
 import { YOUDAO_VOICE_URL } from '../../constants'
-import { ChatCompletion, Word, WordList } from '../../types'
+import { ChatCompletion, Word } from '../../types'
 
 const Item: FC = () => {
   const { id } = useParams()
@@ -27,11 +27,11 @@ const Item: FC = () => {
   const [showDialog, setShowDialog] = useState(!id ? true : false)
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
-  const [wordList, setWordList] = useState<WordList | null>(null)
+  const [words, setWords] = useState<Word[] | null>(null)
   const isUpdating = !!id
 
   const create = async (words: Word[]) => {
-    await POST<WordList>('/word', {
+    await POST<Word>('/word', {
       words
     })
 
@@ -40,7 +40,7 @@ const Item: FC = () => {
   }
 
   const update = async (words: Word[]) => {
-    await PATCH<WordList>(`/word/${id}`, {
+    await PATCH<Word>(`/word/${id}`, {
       words
     })
 
@@ -48,11 +48,10 @@ const Item: FC = () => {
     navigate('/')
   }
 
-  const findOne = useCallback(async () => {
-    const { data } = await GET<WordList>(`/word/${id}`)
-
-    setWordList(data)
-  }, [id])
+  const findOne = async () => {
+    const { data } = await GET<Word[]>(`/word/${id}`, {})
+    setWords(data)
+  }
 
   const batchGetAI = async () => {
     setLoading(true)
@@ -74,15 +73,7 @@ const Item: FC = () => {
         words.push(...JSON.parse(data.choices[0].message.content))
       })
 
-      setWordList(
-        wordList
-          ? {
-              ...wordList
-            }
-          : {
-              words
-            }
-      )
+      setWords(words)
     } finally {
       setLoading(false)
       setShowDialog(false)
@@ -90,21 +81,17 @@ const Item: FC = () => {
   }
 
   useEffect(() => {
-    if (id) {
+    if (isUpdating) {
       findOne()
     }
-  }, [findOne, id])
+  }, [isUpdating])
 
-  if (isUpdating && !wordList) return <CircularLoading />
+  if (isUpdating && !words) return <CircularLoading />
 
   return (
     <section className="pb-14">
-      {wordList?.title ? (
-        <h1 className="font-bold text-4xl">{wordList?.title}</h1>
-      ) : null}
-
       <Formik
-        initialValues={{ words: wordList?.words }}
+        initialValues={{ words }}
         enableReinitialize
         onSubmit={(values) => {
           if (values.words) {
@@ -208,7 +195,7 @@ const Item: FC = () => {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={!wordList || loading}
+                disabled={!words || loading}
               >
                 {isUpdating ? 'Update' : 'Create'}
               </Button>

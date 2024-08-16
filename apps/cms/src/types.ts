@@ -20,14 +20,15 @@ export interface Word {
   explanation: string
   examples: string[]
   quizzes: Quiz[]
-  weightage: number
+  factor: number
   isMarked: boolean
 }
 
-export interface WordList {
-  _id?: string
-  title?: string
-  words: Word[]
+export interface WordListWithPagination {
+  items: Word[]
+  page: number
+  pageSize: number
+  total: number
 }
 
 export interface WordListToChatGPTDto {
@@ -35,7 +36,7 @@ export interface WordListToChatGPTDto {
 }
 
 export interface CreateWordListDto {
-  words: Exclude<Word, '_id' | 'weightage' | 'isMarked'>
+  words: Exclude<Word, '_id' | 'factor' | 'isMarked'>
 }
 
 export type UpdateWordListDto = CreateWordListDto

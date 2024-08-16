@@ -4,35 +4,45 @@ import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatJSONDate } from 'yancey-js-util'
 import { DELETE, GET } from '../../axios'
-import CircularLoading from '../../components/CircularLoading'
 import ConfirmPopover from '../../components/ConfirmPopover'
-import { WordList } from '../../types'
+import { Word, WordListWithPagination } from '../../types'
 
 const List: FC = () => {
-  const [loading, setLoading] = useState(false)
-  const [list, setList] = useState<WordList[] | null>(null)
   const navigate = useNavigate()
+  const [page, setPage] = useState(0)
+  const [rowCount, setRowCount] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [rows, setRows] = useState<Word[] | null>(null)
 
   const fetchData = async () => {
-    const { data } = await GET<WordList[]>('/word')
-    setList(data)
+    setLoading(true)
+    try {
+      const { data } = await GET<WordListWithPagination>('/word', {
+        page,
+        pageSize: 50,
+        fromChallenging: true
+      })
+      setRows(data.items)
+      setRowCount(data.total)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const removeOne = async (id: string) => {
     setLoading(true)
-    await DELETE<WordList>(`/word/${id}`)
-    await fetchData()
-    setLoading(false)
+    try {
+      await DELETE<Word>(`/word/${id}`)
+      await fetchData()
+      setLoading(false)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const columns: GridColDef[] = [
-    { field: 'title', headerName: 'Title', resizable: false, width: 300 },
-    {
-      field: 'wordCount',
-      headerName: 'Words Count',
-      width: 120,
-      resizable: false
-    },
+    { field: 'name', headerName: 'Name', resizable: true },
+    { field: 'explanation', headerName: 'Explanation', resizable: true },
     {
       field: 'createdAt',
       headerName: 'Created At',
@@ -73,30 +83,30 @@ const List: FC = () => {
 
   useEffect(() => {
     fetchData()
-  }, [])
-
-  if (!list || loading) return <CircularLoading />
+  }, [page])
 
   return (
     <section>
       <section className="flex mb-4 w-full justify-end">
         <Button variant="contained" onClick={() => navigate('/item')}>
-          Create a Word List
+          Batch Create
         </Button>
       </section>
       <DataGrid
         getRowId={(row) => row._id}
-        rows={list || []}
+        rows={rows || []}
         isRowSelectable={() => false}
         disableColumnSorting
         disableColumnMenu
         columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 20 }
-          }
+        pagination
+        paginationMode="server"
+        rowCount={rowCount}
+        autoPageSize
+        onPaginationModelChange={(e) => {
+          setPage(e.page)
         }}
-        pageSizeOptions={[20, 60, 100]}
+        loading={loading}
         sx={{
           [`& .${gridClasses.columnSeparator}`]: {
             [`&:not(.${gridClasses['columnSeparator--resizable']})`]: {
