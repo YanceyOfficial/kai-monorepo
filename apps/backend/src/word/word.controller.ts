@@ -30,6 +30,16 @@ export class WordController {
     return this.wordService.findByPagination(pagination)
   }
 
+  @Get('/statistics')
+  public getStatistics(@Query('pageSize') pageSize: number) {
+    return this.wordService.getStatistics(pageSize)
+  }
+
+  @Get('/challenging')
+  public getChallengingWords() {
+    return this.wordService.getChallengingWords()
+  }
+
   @Post()
   public batchInsert(@Body() updateWordListDto: UpdateWordListDto) {
     return this.wordService.batchInsert(updateWordListDto)

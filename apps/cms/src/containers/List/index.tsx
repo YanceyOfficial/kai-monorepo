@@ -19,8 +19,7 @@ const List: FC = () => {
     try {
       const { data } = await GET<WordListWithPagination>('/word', {
         page,
-        pageSize: 50,
-        fromChallenging: true
+        pageSize: 50
       })
       setRows(data.items)
       setRowCount(data.total)
@@ -41,8 +40,21 @@ const List: FC = () => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', resizable: true },
-    { field: 'explanation', headerName: 'Explanation', resizable: true },
+    { field: 'name', headerName: 'Name', resizable: true, width: 200 },
+    {
+      field: 'explanation',
+      headerName: 'Explanation',
+      resizable: true,
+      width: 200
+    },
+    { field: 'isLearned', headerName: 'Is Learned', resizable: true },
+    {
+      field: 'factor',
+      headerName: 'Is Challenging',
+      resizable: true,
+      renderCell: (params) => <span>{(params.value > 3).toString()}</span>
+    },
+
     {
       field: 'createdAt',
       headerName: 'Created At',
