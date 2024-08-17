@@ -6,7 +6,7 @@ import { DEFAULT_FACTOR } from 'src/constants'
 import { PaginationDto } from './dto/pagination.dto'
 import { FactorAction, StatusDto } from './dto/status.dto'
 import { UpdateWordListDto } from './dto/update-word.dto'
-import { Statistics } from './interfaces/statics.interface'
+import { Statistics } from './interfaces/statistics.interface'
 import { Word } from './word.schema'
 
 @Injectable()
