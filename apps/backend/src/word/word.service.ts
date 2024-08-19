@@ -62,7 +62,7 @@ export class WordService {
   }
 
   public async getChallengingWords() {
-    return this.wordModel.find({ factor: { $gte: DEFAULT_FACTOR } })
+    return this.wordModel.find({ factor: { $gt: DEFAULT_FACTOR } })
   }
 
   public async getStatistics(pageSize: number): Promise<Statistics> {
