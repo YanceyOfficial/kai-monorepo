@@ -40,8 +40,10 @@ const Item: FC = () => {
   }
 
   const update = async (words: Word[]) => {
-    await PATCH<Word>(`/word/${id}`, {
-      words
+    await PATCH<Word>('/word', {
+      _id: words[0]._id,
+      explanation: words[0].explanation,
+      examples: words[0].examples
     })
 
     enqueueSnackbar('Save Successfully!', { variant: 'success' })

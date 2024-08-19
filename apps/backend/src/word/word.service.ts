@@ -5,7 +5,7 @@ import { Model } from 'mongoose'
 import { DEFAULT_FACTOR } from 'src/constants'
 import { PaginationDto } from './dto/pagination.dto'
 import { FactorAction, StatusDto } from './dto/status.dto'
-import { UpdateWordListDto } from './dto/update-word.dto'
+import { UpdateWordDto, UpdateWordListDto } from './dto/update-word.dto'
 import { Statistics } from './interfaces/statistics.interface'
 import { Word } from './word.schema'
 
@@ -88,8 +88,11 @@ export class WordService {
     return this.wordModel.insertMany(updateWordListDto.words)
   }
 
-  public async updateOne(id: string, updateWordListDto: UpdateWordListDto) {
-    return this.wordModel.findOneAndUpdate({ _id: id }, updateWordListDto)
+  public async updateOne(updateWordDto: UpdateWordDto) {
+    return this.wordModel.findOneAndUpdate(
+      { _id: updateWordDto._id },
+      updateWordDto
+    )
   }
 
   public async setStatus(id: string, statusDto: StatusDto) {

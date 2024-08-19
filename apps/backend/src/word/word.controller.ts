@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common'
 import { PaginationDto } from './dto/pagination.dto'
 import { StatusDto } from './dto/status.dto'
-import { UpdateWordListDto } from './dto/update-word.dto'
+import { UpdateWordDto, UpdateWordListDto } from './dto/update-word.dto'
 import { WordService } from './word.service'
 
 @Controller('word')
@@ -55,12 +55,9 @@ export class WordController {
     return this.wordService.setStatus(id, statusDto)
   }
 
-  @Patch(':id')
-  public updateOne(
-    @Param('id') id: string,
-    @Body() updateWordListDto: UpdateWordListDto
-  ) {
-    return this.wordService.updateOne(id, updateWordListDto)
+  @Patch()
+  public updateOne(@Body() updateWordListDto: UpdateWordDto) {
+    return this.wordService.updateOne(updateWordListDto)
   }
 
   @Delete(':id')
