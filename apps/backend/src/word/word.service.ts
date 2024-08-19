@@ -19,7 +19,7 @@ export class WordService {
     const total = (await this.wordModel.find()).length
     const items = await this.wordModel
       .find({})
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .skip(Number(page) * Number(pageSize))
       .limit(Number(pageSize))
 
@@ -36,7 +36,7 @@ export class WordService {
   }
 
   public async getStatistics(pageSize: number): Promise<Statistics> {
-    const allWords = await this.wordModel.find().sort({ createdAt: -1 })
+    const allWords = await this.wordModel.find().sort({ createdAt: 1 })
     const challengingCount = allWords.filter(
       (word) => word.factor > DEFAULT_FACTOR
     ).length
