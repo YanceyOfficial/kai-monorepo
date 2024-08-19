@@ -3,9 +3,10 @@ import { InjectModel } from '@nestjs/mongoose'
 import { chunk } from 'lodash'
 import { Model } from 'mongoose'
 import { DEFAULT_FACTOR } from 'src/constants'
+import { CreateWordListDto } from './dto/create-word.dto'
 import { PaginationDto } from './dto/pagination.dto'
 import { FactorAction, StatusDto } from './dto/status.dto'
-import { UpdateWordDto, UpdateWordListDto } from './dto/update-word.dto'
+import { UpdateWordDto } from './dto/update-word.dto'
 import { Statistics } from './interfaces/statistics.interface'
 import { Word } from './word.schema'
 
@@ -84,8 +85,8 @@ export class WordService {
     return this.wordModel.find({ _id: id })
   }
 
-  public async batchInsert(updateWordListDto: UpdateWordListDto) {
-    return this.wordModel.insertMany(updateWordListDto.words)
+  public async batchInsert(createWordListDto: CreateWordListDto) {
+    return this.wordModel.insertMany(createWordListDto.words)
   }
 
   public async updateOne(updateWordDto: UpdateWordDto) {

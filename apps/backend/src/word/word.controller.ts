@@ -10,9 +10,10 @@ import {
   UsePipes,
   ValidationPipe
 } from '@nestjs/common'
+import { CreateWordListDto } from './dto/create-word.dto'
 import { PaginationDto } from './dto/pagination.dto'
 import { StatusDto } from './dto/status.dto'
-import { UpdateWordDto, UpdateWordListDto } from './dto/update-word.dto'
+import { UpdateWordDto } from './dto/update-word.dto'
 import { WordService } from './word.service'
 
 @Controller('word')
@@ -41,8 +42,8 @@ export class WordController {
   }
 
   @Post()
-  public batchInsert(@Body() updateWordListDto: UpdateWordListDto) {
-    return this.wordService.batchInsert(updateWordListDto)
+  public batchInsert(@Body() createWordListDto: CreateWordListDto) {
+    return this.wordService.batchInsert(createWordListDto)
   }
 
   @Get('/:id')
