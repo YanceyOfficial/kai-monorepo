@@ -7,7 +7,6 @@ import { CreateWordListDto } from './dto/create-word.dto'
 import { PaginationDto } from './dto/pagination.dto'
 import { FactorAction, StatusDto } from './dto/status.dto'
 import { UpdateWordDto } from './dto/update-word.dto'
-import { Statistics } from './interfaces/statistics.interface'
 import { Word } from './word.schema'
 
 @Injectable()
@@ -45,7 +44,6 @@ export class WordService {
 
     const total = await this.wordModel.countDocuments()
     const items = await this.wordModel
-      .distinct('name')
       .find({
         name: { $regex: !search ? '' : search, $options: 'i' }
       })
@@ -65,8 +63,8 @@ export class WordService {
     return this.wordModel.find({ factor: { $gt: DEFAULT_FACTOR } })
   }
 
-  public async getStatistics(pageSize: number): Promise<Statistics> {
-    const allWords = await this.wordModel.find().sort({ createdAt: 1 })
+  public async getStatistics(pageSize: number) {
+    const allWords = await this.wordModel.find({}).sort({ createdAt: 1 })
     const challengingCount = allWords.filter(
       (word) => word.factor > DEFAULT_FACTOR
     ).length
@@ -76,8 +74,9 @@ export class WordService {
       items: chunk(allWords, pageSize).map((chunkedWords, i) => ({
         total: chunkedWords.length,
         page: i,
-        learnedCount: chunkedWords.filter((words) => words.isLearned).length
-      }))
+        learnedCount: chunkedWords.filter((word) => word.isLearned).length
+      })),
+      chunked: chunk(allWords, pageSize)
     }
   }
 
