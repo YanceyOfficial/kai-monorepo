@@ -63,6 +63,9 @@ export class Word {
   @Prop({ default: false })
   isLearned: boolean
 
+  @Prop({ required: true })
+  sequenceNumber: number
+
   @Prop({ efault: Date.now })
   createdAt: Date
 

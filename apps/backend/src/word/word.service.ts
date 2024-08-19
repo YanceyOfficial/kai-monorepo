@@ -48,7 +48,7 @@ export class WordService {
       .find({
         name: { $regex: !search ? '' : search, $options: 'i' }
       })
-      .sort({ createdAt: 1 })
+      .sort({ sequenceNumber: 1 })
       .skip(Number(page) * Number(pageSize))
       .limit(Number(pageSize))
 
@@ -67,7 +67,7 @@ export class WordService {
   public async getStatistics(pageSize: number): Promise<Statistics> {
     const allWords = await this.wordModel
       .find({ name: { $regex: '', $options: 'i' } })
-      .sort({ createdAt: 1 })
+      .sort({ sequenceNumber: 1 })
     const challengingCount = allWords.filter(
       (word) => word.factor > DEFAULT_FACTOR
     ).length
@@ -87,7 +87,21 @@ export class WordService {
   }
 
   public async batchInsert(createWordListDto: CreateWordListDto) {
-    return this.wordModel.insertMany(createWordListDto.words)
+    const { sequenceNumber: maxSequenceNumber } = await this.wordModel
+      .findOne()
+      .sort({ sequenceNumber: -1 })
+
+    const existingUsers = await this.wordModel.find({}).select('name').lean()
+    const existingNames = new Set(existingUsers.map((user) => user.name))
+
+    const usersToInsert = createWordListDto.words
+      .filter((user) => !existingNames.has(user.name))
+      .map((word, i) => ({
+        ...word,
+        sequenceNumber: maxSequenceNumber + i + 1
+      }))
+
+    return this.wordModel.insertMany(usersToInsert)
   }
 
   public async updateOne(updateWordDto: UpdateWordDto) {
