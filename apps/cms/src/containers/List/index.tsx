@@ -1,14 +1,15 @@
-import { Button } from '@mui/material'
+import { Button, TextField } from '@mui/material'
 import { DataGrid, GridColDef, gridClasses } from '@mui/x-data-grid'
 import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatJSONDate } from 'yancey-js-util'
-import { DELETE, GET } from '../../axios'
+import { DELETE, GET, POST } from '../../axios'
 import ConfirmPopover from '../../components/ConfirmPopover'
 import { Word, WordListWithPagination } from '../../types'
 
 const List: FC = () => {
   const navigate = useNavigate()
+  const [searchInput, setSearchInput] = useState('')
   const [page, setPage] = useState(0)
   const [rowCount, setRowCount] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -19,7 +20,8 @@ const List: FC = () => {
     try {
       const { data } = await GET<WordListWithPagination>('/word', {
         page,
-        pageSize: 50
+        pageSize: 50,
+        search: searchInput
       })
       setRows(data.items)
       setRowCount(data.total)
@@ -33,7 +35,16 @@ const List: FC = () => {
     try {
       await DELETE<Word>(`/word/${id}`)
       await fetchData()
+    } finally {
       setLoading(false)
+    }
+  }
+
+  const deduplicate = async () => {
+    setLoading(true)
+    try {
+      await POST<Word>('/word/deduplicate')
+      window.location.reload()
     } finally {
       setLoading(false)
     }
@@ -99,10 +110,33 @@ const List: FC = () => {
 
   return (
     <section>
-      <section className="flex mb-4 w-full justify-end">
-        <Button variant="contained" onClick={() => navigate('/item')}>
-          Batch Create
-        </Button>
+      <section className="flex mb-4 w-full justify-between">
+        <section className="flex gap-2 items-center">
+          <TextField
+            variant="standard"
+            className="w-48"
+            onInput={
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
+              (e) => setSearchInput(e.target.value)
+            }
+          />
+          <Button variant="contained" onClick={fetchData}>
+            Search
+          </Button>
+        </section>
+        <section className="flex gap-2">
+          <Button
+            variant="contained"
+            color="info"
+            onClick={() => navigate('/item')}
+          >
+            Batch Insert
+          </Button>
+          <Button variant="contained" color="warning" onClick={deduplicate}>
+            Deduplicate
+          </Button>
+        </section>
       </section>
       <DataGrid
         getRowId={(row) => row._id}

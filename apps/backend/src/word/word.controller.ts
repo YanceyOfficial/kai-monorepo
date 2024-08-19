@@ -67,4 +67,9 @@ export class WordController {
   public removeOne(@Param('id') id: string) {
     return this.wordService.removeOne(id)
   }
+
+  @Post('/deduplicate')
+  public deduplicate() {
+    return this.wordService.deduplicate()
+  }
 }

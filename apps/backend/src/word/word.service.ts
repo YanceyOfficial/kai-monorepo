@@ -13,12 +13,41 @@ import { Word } from './word.schema'
 export class WordService {
   constructor(@InjectModel(Word.name) private wordModel: Model<Word>) {}
 
-  public async findByPagination(pagination: PaginationDto) {
-    const { page, pageSize } = pagination
+  public async deduplicate() {
+    const duplicates = await this.wordModel.aggregate([
+      {
+        $group: {
+          _id: '$name',
+          count: { $sum: 1 },
+          ids: { $push: '$_id' }
+        }
+      },
+      {
+        $match: {
+          count: { $gt: 1 }
+        }
+      }
+    ])
 
-    const total = (await this.wordModel.find()).length
+    let idsToDelete = []
+    duplicates.forEach((group) => {
+      idsToDelete = idsToDelete.concat(group.ids.slice(1))
+    })
+
+    return this.wordModel.deleteMany({
+      _id: { $in: idsToDelete }
+    })
+  }
+
+  public async findByPagination(pagination: PaginationDto) {
+    const { page, pageSize, search } = pagination
+
+    const total = await this.wordModel.countDocuments()
     const items = await this.wordModel
-      .find({})
+      .distinct('name')
+      .find({
+        name: { $regex: !search ? '' : search, $options: 'i' }
+      })
       .sort({ createdAt: 1 })
       .skip(Number(page) * Number(pageSize))
       .limit(Number(pageSize))
