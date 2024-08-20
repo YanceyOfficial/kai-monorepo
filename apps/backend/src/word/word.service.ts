@@ -14,32 +14,6 @@ import { Word } from './word.schema'
 export class WordService {
   constructor(@InjectModel(Word.name) private wordModel: Model<Word>) {}
 
-  public async deduplicate() {
-    const duplicates = await this.wordModel.aggregate([
-      {
-        $group: {
-          _id: '$name',
-          count: { $sum: 1 },
-          ids: { $push: '$_id' }
-        }
-      },
-      {
-        $match: {
-          count: { $gt: 1 }
-        }
-      }
-    ])
-
-    let idsToDelete = []
-    duplicates.forEach((group) => {
-      idsToDelete = idsToDelete.concat(group.ids.slice(1))
-    })
-
-    return this.wordModel.deleteMany({
-      _id: { $in: idsToDelete }
-    })
-  }
-
   public async findByPagination(pagination: PaginationDto) {
     const { page, pageSize, search } = pagination
 

@@ -3,7 +3,7 @@ import { DataGrid, GridColDef, gridClasses } from '@mui/x-data-grid'
 import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatJSONDate } from 'yancey-js-util'
-import { DELETE, GET, POST } from '../../axios'
+import { DELETE, GET } from '../../axios'
 import ConfirmPopover from '../../components/ConfirmPopover'
 import { Word, WordListWithPagination } from '../../types'
 
@@ -35,16 +35,6 @@ const List: FC = () => {
     try {
       await DELETE<Word>(`/word/${id}`)
       await fetchData()
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const deduplicate = async () => {
-    setLoading(true)
-    try {
-      await POST<Word>('/word/deduplicate')
-      window.location.reload()
     } finally {
       setLoading(false)
     }
@@ -125,18 +115,13 @@ const List: FC = () => {
             Search
           </Button>
         </section>
-        <section className="flex gap-2">
-          <Button
-            variant="contained"
-            color="info"
-            onClick={() => navigate('/item')}
-          >
-            Batch Insert
-          </Button>
-          <Button variant="contained" color="warning" onClick={deduplicate}>
-            Deduplicate
-          </Button>
-        </section>
+        <Button
+          variant="contained"
+          color="info"
+          onClick={() => navigate('/item')}
+        >
+          Batch Insert
+        </Button>
       </section>
       <DataGrid
         getRowId={(row) => row._id}
