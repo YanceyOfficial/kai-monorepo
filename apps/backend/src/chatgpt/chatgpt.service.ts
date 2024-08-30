@@ -16,11 +16,12 @@ export class ChatgptService {
     )
   }
   public async create(words: string[]) {
-    const { id, created, choices, usage } =
-      await this.client.getChatCompletions(this.AZURE_OPENAI_DEPLOMENT_ID, [
-        {
-          role: 'system',
-          content: `
+    try {
+      const { id, created, choices, usage } =
+        await this.client.getChatCompletions(this.AZURE_OPENAI_DEPLOMENT_ID, [
+          {
+            role: 'system',
+            content: `
 You mission is to help me learn and review English words, I"ll give you a series of English words and phrases:
 
 1. Generate a JSON format including Chinese explanation, american english pronunciation, syllabification, quizzes and at least 3 examples;
@@ -105,13 +106,16 @@ This is a example:
   }
 ]
 `
-        },
-        {
-          role: 'user',
-          content: words.join('; ')
-        }
-      ])
+          },
+          {
+            role: 'user',
+            content: words.join('; ')
+          }
+        ])
 
-    return { id, created, choices, usage }
+      return { id, created, choices, usage }
+    } catch (e) {
+      return e
+    }
   }
 }
