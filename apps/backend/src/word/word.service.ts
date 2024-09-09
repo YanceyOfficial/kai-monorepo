@@ -67,17 +67,17 @@ export class WordService {
       .findOne()
       .sort({ sequenceNumber: -1 })
 
-    const existingUsers = await this.wordModel.find({}).select('name').lean()
-    const existingNames = new Set(existingUsers.map((user) => user.name))
+    // const existingWords = await this.wordModel.find({}).select('name').lean()
+    // const existingNames = new Set(existingWords.map((word) => word.name))
 
-    const usersToInsert = createWordListDto.words
-      .filter((user) => !existingNames.has(user.name))
+    const wordsToInsert = createWordListDto.words
+      // .filter((word) => !existingNames.has(word.name))
       .map((word, i) => ({
         ...word,
         sequenceNumber: maxSequenceNumber + i + 1
       }))
 
-    return this.wordModel.insertMany(usersToInsert)
+    return this.wordModel.insertMany(wordsToInsert)
   }
 
   public async updateOne(updateWordDto: UpdateWordDto) {
