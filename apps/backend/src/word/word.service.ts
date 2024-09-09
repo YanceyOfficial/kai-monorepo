@@ -74,7 +74,7 @@ export class WordService {
       // .filter((word) => !existingNames.has(word.name))
       .map((word, i) => ({
         ...word,
-        sequenceNumber: maxSequenceNumber + i + 1
+        sequenceNumber: i + 1
       }))
 
     return this.wordModel.insertMany(wordsToInsert)
