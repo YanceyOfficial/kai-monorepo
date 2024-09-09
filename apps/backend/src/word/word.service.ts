@@ -63,18 +63,18 @@ export class WordService {
   }
 
   public async batchInsert(createWordListDto: CreateWordListDto) {
-    // const { sequenceNumber: maxSequenceNumber } = await this.wordModel
-    //   .findOne()
-    //   .sort({ sequenceNumber: -1 })
+    const { sequenceNumber: maxSequenceNumber } = await this.wordModel
+      .findOne()
+      .sort({ sequenceNumber: -1 })
 
-    // const existingWords = await this.wordModel.find({}).select('name').lean()
-    // const existingNames = new Set(existingWords.map((word) => word.name))
+    const existingWords = await this.wordModel.find({}).select('name').lean()
+    const existingNames = new Set(existingWords.map((word) => word.name))
 
     const wordsToInsert = createWordListDto.words
-      // .filter((word) => !existingNames.has(word.name))
+      .filter((word) => !existingNames.has(word.name))
       .map((word, i) => ({
         ...word,
-        sequenceNumber: i + 1
+        sequenceNumber: maxSequenceNumber + i + 1
       }))
 
     return this.wordModel.insertMany(wordsToInsert)
