@@ -4,9 +4,8 @@ import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatJSONDate } from 'yancey-js-util'
 import { DELETE, GET, PATCH } from '../../axios'
-import AudioPlayer from '../../components/AudioPlayer'
 import ConfirmPopover from '../../components/ConfirmPopover'
-import { CHALLENGING_NUMBER, YOUDAO_VOICE_URL } from '../../constants'
+import { CHALLENGING_NUMBER } from '../../constants'
 import { Word, WordListWithPagination } from '../../types'
 
 const List: FC = () => {
@@ -63,17 +62,11 @@ const List: FC = () => {
       field: 'name',
       headerName: 'Name',
       resizable: true,
-      width: 200,
-      renderCell: (params) => (
-        <span>
-          <span className="mr-2">{params.value}</span>
-          <AudioPlayer audioUrl={`${YOUDAO_VOICE_URL}${params.value}`} />
-        </span>
-      )
+      width: 200
     },
     {
-      field: 'syllabification',
-      headerName: 'Syllabification',
+      field: 'phoneticNotation',
+      headerName: 'PhoneticNotation',
       resizable: true,
       width: 200
     },
