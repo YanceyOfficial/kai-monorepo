@@ -3,8 +3,10 @@ import { DataGrid, GridColDef, gridClasses } from '@mui/x-data-grid'
 import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatJSONDate } from 'yancey-js-util'
-import { DELETE, GET } from '../../axios'
+import { DELETE, GET, PATCH } from '../../axios'
+import AudioPlayer from '../../components/AudioPlayer'
 import ConfirmPopover from '../../components/ConfirmPopover'
+import { CHALLENGING_NUMBER, YOUDAO_VOICE_URL } from '../../constants'
 import { Word, WordListWithPagination } from '../../types'
 
 const List: FC = () => {
@@ -30,6 +32,22 @@ const List: FC = () => {
     }
   }
 
+  const reverseWordToChallenging = async (id: string) => {
+    const wordInfo = rows?.find((row) => row._id === id)
+    if (!wordInfo) return
+
+    setLoading(true)
+    try {
+      await PATCH<Word>('/word', {
+        ...wordInfo,
+        factor: CHALLENGING_NUMBER + 1
+      })
+      fetchData()
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const removeOne = async (id: string) => {
     setLoading(true)
     try {
@@ -41,7 +59,22 @@ const List: FC = () => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', resizable: true, width: 200 },
+    {
+      field: 'name',
+      headerName: 'Name',
+      resizable: true,
+      renderCell: (params) => (
+        <span>
+          <span className="mr-2">{params.value}</span>
+          <AudioPlayer audioUrl={`${YOUDAO_VOICE_URL}${name}`} />
+        </span>
+      )
+    },
+    {
+      field: 'syllabification',
+      headerName: 'Syllabification',
+      resizable: true
+    },
     {
       field: 'explanation',
       headerName: 'Explanation',
@@ -53,7 +86,22 @@ const List: FC = () => {
       field: 'factor',
       headerName: 'Is Challenging',
       resizable: true,
-      renderCell: (params) => <span>{(params.value > 3).toString()}</span>
+      renderCell: (params) => (
+        <span>
+          <span className="mr-2">
+            {(params.value > CHALLENGING_NUMBER).toString()}
+          </span>
+          {params.value <= CHALLENGING_NUMBER && (
+            <Button
+              variant="contained"
+              color="info"
+              onClick={() => reverseWordToChallenging(params.row._id)}
+            >
+              Reverse
+            </Button>
+          )}
+        </span>
+      )
     },
 
     {
