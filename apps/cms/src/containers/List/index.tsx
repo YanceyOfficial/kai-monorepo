@@ -66,7 +66,7 @@ const List: FC = () => {
     },
     {
       field: 'phoneticNotation',
-      headerName: 'PhoneticNotation',
+      headerName: 'Phonetic Notation',
       resizable: true,
       width: 200
     },
