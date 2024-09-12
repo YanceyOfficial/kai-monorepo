@@ -63,17 +63,19 @@ const List: FC = () => {
       field: 'name',
       headerName: 'Name',
       resizable: true,
+      width: 200,
       renderCell: (params) => (
         <span>
           <span className="mr-2">{params.value}</span>
-          <AudioPlayer audioUrl={`${YOUDAO_VOICE_URL}${name}`} />
+          <AudioPlayer audioUrl={`${YOUDAO_VOICE_URL}${params.value}`} />
         </span>
       )
     },
     {
       field: 'syllabification',
       headerName: 'Syllabification',
-      resizable: true
+      resizable: true,
+      width: 200
     },
     {
       field: 'explanation',
@@ -86,6 +88,7 @@ const List: FC = () => {
       field: 'factor',
       headerName: 'Is Challenging',
       resizable: true,
+      width: 400,
       renderCell: (params) => (
         <span>
           <span className="mr-2">
@@ -93,8 +96,7 @@ const List: FC = () => {
           </span>
           {params.value <= CHALLENGING_NUMBER && (
             <Button
-              variant="contained"
-              color="info"
+              variant="text"
               onClick={() => reverseWordToChallenging(params.row._id)}
             >
               Reverse
