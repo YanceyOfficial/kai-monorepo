@@ -4,8 +4,9 @@ import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatJSONDate } from 'yancey-js-util'
 import { DELETE, GET, PATCH } from '../../axios'
+import AudioPlayer from '../../components/AudioPlayer'
 import ConfirmPopover from '../../components/ConfirmPopover'
-import { CHALLENGING_NUMBER } from '../../constants'
+import { CHALLENGING_NUMBER, YOUDAO_VOICE_URL } from '../../constants'
 import { Word, WordListWithPagination } from '../../types'
 
 const List: FC = () => {
@@ -61,27 +62,33 @@ const List: FC = () => {
     {
       field: 'name',
       headerName: 'Name',
-      resizable: true,
-      width: 200
+      width: 120
+    },
+    {
+      field: '',
+      headerName: 'Pronunciation',
+      width: 48,
+      renderCell: (params) => (
+        <div className='relative top-[10px]'>
+          <AudioPlayer audioUrl={`${YOUDAO_VOICE_URL}${params.row.name}`} />
+        </div>
+      )
     },
     {
       field: 'phoneticNotation',
       headerName: 'Phonetic Notation',
-      resizable: true,
       width: 200
     },
     {
       field: 'explanation',
       headerName: 'Explanation',
-      resizable: true,
       width: 200
     },
-    { field: 'isLearned', headerName: 'Is Learned', resizable: true },
+    { field: 'isLearned', headerName: 'Is Learned' },
     {
       field: 'factor',
-      headerName: 'Is Challenging',
-      resizable: true,
-      width: 400,
+      headerName: 'Is Challenging Word',
+      width: 200,
       renderCell: (params) => (
         <span>
           <span className="mr-2">
@@ -103,20 +110,17 @@ const List: FC = () => {
       field: 'createdAt',
       headerName: 'Created At',
       valueGetter: (createdAt) => formatJSONDate(createdAt),
-      resizable: false,
-      width: 300
+      width: 200
     },
     {
       field: 'updatedAt',
       headerName: 'Updated At',
       valueGetter: (updatedAt) => formatJSONDate(updatedAt),
-      resizable: false,
-      width: 300
+      width: 200
     },
     {
       field: '_id',
       headerName: 'Actions',
-      resizable: false,
       width: 300,
       renderCell: (params) => (
         <>
