@@ -10,6 +10,8 @@
 
 Flashcards using AI for learning words. This is the repository for the CMS and backend.
 
+![screenshot](./screenshot/screenshot.gif)
+
 ## Available Scripts
 
 - To start CMS development server, you can execute `npm run dev` under the `apps/cms` folder.
