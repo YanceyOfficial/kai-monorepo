@@ -16,6 +16,7 @@ const List: FC = () => {
   const [rowCount, setRowCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [rows, setRows] = useState<Word[] | null>(null)
+  const [showExplanationId, setShowExplanationId] = useState('')
 
   const fetchData = async () => {
     setLoading(true)
@@ -69,7 +70,7 @@ const List: FC = () => {
       headerName: 'Pronunciation',
       width: 48,
       renderCell: (params) => (
-        <div className='relative top-[10px]'>
+        <div className="relative top-[10px]">
           <AudioPlayer audioUrl={`${YOUDAO_VOICE_URL}${params.row.name}`} />
         </div>
       )
@@ -82,7 +83,21 @@ const List: FC = () => {
     {
       field: 'explanation',
       headerName: 'Explanation',
-      width: 200
+      width: 200,
+      renderCell: (params) => (
+        <span>
+          {params.row._id === showExplanationId ? (
+            <span className="mr-2">{params.value}</span>
+          ) : (
+            <Button
+              variant="text"
+              onClick={() => setShowExplanationId(params.row._id)}
+            >
+              Reveal
+            </Button>
+          )}
+        </span>
+      )
     },
     { field: 'isLearned', headerName: 'Is Learned' },
     {
