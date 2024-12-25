@@ -20,7 +20,6 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@azure/openai": "^1.0.0-beta.12",
     "@nestjs/axios": "^3.0.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.2",
@@ -36,10 +35,10 @@
     "joi": "^17.13.1",
     "keycloak-connect": "^24.0.5",
     "lodash": "^4.17.21",
-    "microsoft-cognitiveservices-speech-sdk": "^1.38.0",
     "mongoose": "^8.4.3",
     "nest-keycloak-connect": "^1.10.0",
     "nest-winston": "^1.10.0",
+    "openai": "^4.77.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "uuid": "^10.0.0",

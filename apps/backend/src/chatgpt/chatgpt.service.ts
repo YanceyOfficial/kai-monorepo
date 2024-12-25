@@ -1,27 +1,23 @@
-import { AzureKeyCredential, OpenAIClient } from '@azure/openai'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import OpenAI from 'openai'
 
 @Injectable()
 export class ChatgptService {
-  private readonly client: OpenAIClient
-  private readonly AZURE_OPENAI_DEPLOMENT_ID: string
+  private readonly client: OpenAI
   constructor(public configService: ConfigService) {
-    this.client = new OpenAIClient(
-      configService.get('AZURE_OPENAI_ENDPOINT'),
-      new AzureKeyCredential(configService.get('AZURE_OPENAI_KEY'))
-    )
-    this.AZURE_OPENAI_DEPLOMENT_ID = configService.get(
-      'AZURE_OPENAI_DEPLOMENT_ID'
-    )
+    this.client = new OpenAI({ apiKey: configService.get('OPENAI_KEY') })
   }
+
   public async create(words: string[]) {
     try {
       const { id, created, choices, usage } =
-        await this.client.getChatCompletions(this.AZURE_OPENAI_DEPLOMENT_ID, [
-          {
-            role: 'system',
-            content: `
+        await this.client.chat.completions.create({
+          model: 'gpt-4o',
+          messages: [
+            {
+              role: 'system',
+              content: `
 You mission is to help me learn and review English words, I"ll give you a series of English words and phrases:
 
 1. Generate a JSON format including Chinese explanation, american english pronunciation, syllabification, quizzes and at least 3 examples;
@@ -106,12 +102,13 @@ This is a example:
   }
 ]
 `
-          },
-          {
-            role: 'user',
-            content: words.join('; ')
-          }
-        ])
+            },
+            {
+              role: 'user',
+              content: words.join('; ')
+            }
+          ]
+        })
 
       return { id, created, choices, usage }
     } catch (e) {

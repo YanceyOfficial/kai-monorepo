@@ -93,9 +93,7 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p ./apps/backend
-          echo "AZURE_OPENAI_KEY=${{ secrets.AZURE_OPENAI_KEY }}" >> ./apps/backend/.env
-          echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> ./apps/backend/.env
-          echo "AZURE_OPENAI_DEPLOMENT_ID=${{ secrets.AZURE_OPENAI_DEPLOMENT_ID }}" >> ./apps/backend/.env
+          echo "OPENAI_KEY=${{ secrets.OPENAI_KEY }}" >> ./apps/backend/.env
           echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> ./apps/backend/.env
           echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> ./apps/backend/.env
           echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> ./apps/backend/.env
