@@ -59,10 +59,10 @@ const Item: FC = () => {
     setLoading(true)
 
     const wordsInput = input.split('\n').map((word) => word.trim())
-    const promises: Promise<AxiosResponse<Word>>[] = []
+    const promises: Promise<AxiosResponse<Word[]>>[] = []
     for (let i = 0; i < wordsInput.length; i += 10) {
       promises.push(
-        POST<Word>('/chatgpt', {
+        POST<Word[]>('/chatgpt', {
           words: wordsInput.slice(i, i + 10)
         })
       )
@@ -70,7 +70,10 @@ const Item: FC = () => {
 
     try {
       const res = await Promise.all(promises)
-      setWords(res.map((item) => item.data))
+      const words: Word[] = []
+      res.forEach((item) => words.push(...item.data))
+
+      setWords(words)
     } finally {
       setLoading(false)
       setShowDialog(false)

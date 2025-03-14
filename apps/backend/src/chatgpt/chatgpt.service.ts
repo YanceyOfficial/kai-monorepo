@@ -17,7 +17,7 @@ export class ChatgptService {
     const result = await generateObject({
       model: this.openai('gpt-4o'),
       output: 'array',
-      system: 'Given a list of English words and generate their word card.',
+      system: 'Given a list of English words and generate their word cards.',
       prompt: words.filter((word) => word.trim() !== '').join('; '),
       schema: z.object({
         name: z.string().describe('The name of the word. e.g., eccentric'),
@@ -50,7 +50,7 @@ export class ChatgptService {
               answers: z.string().array().describe('The answers of the question, you should give an array that just includes one element, because we will support other types problem later. e.g., ["eccentrics"]'),
               translation: z.string().describe('The translation of the question. e.g., 他们是问题家庭；他们是这个世界的怪人。')
             })
-            .describe('Several single-choice quizzes for interview. Please generate at least 3 quizzes for every word.')
+            .describe('Several single-choice quizzes for review. Please generate at least 3 quizzes for every word.')
         )
       })
     })
