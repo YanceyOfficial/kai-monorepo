@@ -40,18 +40,3 @@ export interface CreateWordListDto {
 }
 
 export type UpdateWordListDto = CreateWordListDto
-
-export interface ChatCompletion {
-  id: string
-  created: number
-  model: string
-  choices: {
-    text: string
-    index: number
-    logprobs: Record<string, unknown>
-    finish_reason: string
-    message: {
-      content: string
-    }
-  }[]
-}

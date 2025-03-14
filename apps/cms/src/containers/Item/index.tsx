@@ -19,7 +19,7 @@ import { GET, PATCH, POST } from '../../axios'
 import AudioPlayer from '../../components/AudioPlayer'
 import CircularLoading from '../../components/CircularLoading'
 import { YOUDAO_VOICE_URL } from '../../constants'
-import { ChatCompletion, Word } from '../../types'
+import { Word } from '../../types'
 
 const Item: FC = () => {
   const { id } = useParams()
@@ -59,10 +59,10 @@ const Item: FC = () => {
     setLoading(true)
 
     const wordsInput = input.split('\n').map((word) => word.trim())
-    const promises: Promise<AxiosResponse<ChatCompletion>>[] = []
+    const promises: Promise<AxiosResponse<Word>>[] = []
     for (let i = 0; i < wordsInput.length; i += 10) {
       promises.push(
-        POST<ChatCompletion>('/chatgpt', {
+        POST<Word>('/chatgpt', {
           words: wordsInput.slice(i, i + 10)
         })
       )
@@ -70,12 +70,7 @@ const Item: FC = () => {
 
     try {
       const res = await Promise.all(promises)
-      const words: Word[] = []
-      res.forEach(({ data }) => {
-        words.push(...JSON.parse(data.choices[0].message.content))
-      })
-
-      setWords(words)
+      setWords(res.map((item) => item.data))
     } finally {
       setLoading(false)
       setShowDialog(false)

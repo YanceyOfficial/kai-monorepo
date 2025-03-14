@@ -3,7 +3,7 @@ import { HydratedDocument } from 'mongoose'
 import { DEFAULT_FACTOR } from 'src/constants'
 import { v4 as uuidv4 } from 'uuid'
 
-export type WordDocument = HydratedDocument<ChallengingWord>
+export type WordDocument = HydratedDocument<EnglishWords>
 
 export enum QuizType {
   SingleChoice = 'singleChoice',
@@ -32,7 +32,7 @@ export class Quiz {
 }
 
 @Schema({ timestamps: true })
-export class ChallengingWord {
+export class EnglishWords {
   @Prop({ default: uuidv4 })
   _id: string
 
@@ -73,4 +73,4 @@ export class ChallengingWord {
   updatedAt: Date
 }
 
-export const WordSchema = SchemaFactory.createForClass(ChallengingWord)
+export const WordSchema = SchemaFactory.createForClass(EnglishWords)

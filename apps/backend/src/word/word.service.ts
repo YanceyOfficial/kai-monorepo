@@ -8,12 +8,12 @@ import { PaginationDto } from './dto/pagination.dto'
 import { FactorAction, StatusDto } from './dto/status.dto'
 import { UpdateWordDto } from './dto/update-word.dto'
 import { Statistics } from './interfaces/statistics.interface'
-import { ChallengingWord } from './word.schema'
+import { EnglishWords } from './word.schema'
 
 @Injectable()
 export class WordService {
   constructor(
-    @InjectModel(ChallengingWord.name) private wordModel: Model<ChallengingWord>
+    @InjectModel(EnglishWords.name) private wordModel: Model<EnglishWords>
   ) {}
 
   public async findByPagination(pagination: PaginationDto) {
