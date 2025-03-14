@@ -10,8 +10,7 @@ export class ChatgptService {
   private readonly openai: OpenAIProvider
   constructor(public configService: ConfigService) {
     this.openai = createOpenAI({
-      apiKey: configService.get('OPENAI_KEY'),
-      baseURL: 'https://api.openai-proxy.com/v1'
+      apiKey: configService.get('OPENAI_KEY')
     })
   }
 
