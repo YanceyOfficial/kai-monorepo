@@ -6,9 +6,7 @@ import { WordService } from './word.service'
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: EnglishWords.name, schema: WordSchema }
-    ])
+    MongooseModule.forFeature([{ name: EnglishWords.name, schema: WordSchema }])
   ],
   controllers: [WordController],
   providers: [WordService]

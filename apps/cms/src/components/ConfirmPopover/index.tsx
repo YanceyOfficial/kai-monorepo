@@ -7,10 +7,6 @@ import {
 } from '@mui/material'
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
 import { FC, ReactNode } from 'react'
-// import {
-//   POPOVER_ANCHOR_ORIGIN,
-//   POPOVER_TRANSFORM_ORIGIN
-// } from 'src/shared/constants'
 
 interface Props {
   title?: string
@@ -28,8 +24,6 @@ const ConfirmPopover: FC<Props> = ({ children, onOk, title }) => {
           </div>
           <Popover
             {...bindPopover(popupState)}
-            // anchorOrigin={POPOVER_ANCHOR_ORIGIN}
-            // transformOrigin={POPOVER_TRANSFORM_ORIGIN}
             disableRestoreFocus
           >
             <Paper>
